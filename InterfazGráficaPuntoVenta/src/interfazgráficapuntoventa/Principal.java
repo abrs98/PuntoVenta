@@ -5,17 +5,26 @@
  */
 package interfazgráficapuntoventa;
 
+import javax.swing.JOptionPane;
+import GUI.FrmInicioSesion;
+import GUI.FrmRegistroAdmin;
+
 /**
  *
  * @author Abrahan Barrios
  */
-public class InterfazGráficaPuntoVenta {
+public class Principal {
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         // TODO code application logic here
+
+        FrmRegistroAdmin ad = new FrmRegistroAdmin();
+        ad.setLocationRelativeTo(null);
+        ad.setVisible(true);
+
     }
-    
+
 }
