@@ -75,6 +75,7 @@ public class FrmAdministrador extends javax.swing.JFrame {
         opcMnuBuscarProducto = new javax.swing.JMenuItem();
         opcMnuEdicionCategoria = new javax.swing.JMenuItem();
         opcMnuEdicionProveedor = new javax.swing.JMenuItem();
+        opcMnuEdicionCategoria1 = new javax.swing.JMenuItem();
         mnuAyuda = new javax.swing.JMenu();
         opcMnuAcerca = new javax.swing.JMenuItem();
 
@@ -213,6 +214,14 @@ public class FrmAdministrador extends javax.swing.JFrame {
         });
         mnuProducto.add(opcMnuEdicionProveedor);
 
+        opcMnuEdicionCategoria1.setText("Consultar reporte de venta");
+        opcMnuEdicionCategoria1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                opcMnuEdicionCategoria1ActionPerformed(evt);
+            }
+        });
+        mnuProducto.add(opcMnuEdicionCategoria1);
+
         menuBar.add(mnuProducto);
 
         mnuAyuda.setText("Ayuda");
@@ -301,6 +310,12 @@ public class FrmAdministrador extends javax.swing.JFrame {
        escritorio.add(p).setVisible(true);
     }//GEN-LAST:event_opcMnuRegistrarProductoActionPerformed
 
+    private void opcMnuEdicionCategoria1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_opcMnuEdicionCategoria1ActionPerformed
+        FrmConsultarReporte reporte = new FrmConsultarReporte();
+        
+        escritorio.add(reporte).setVisible(true);
+    }//GEN-LAST:event_opcMnuEdicionCategoria1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -355,6 +370,7 @@ public class FrmAdministrador extends javax.swing.JFrame {
     private javax.swing.JMenuItem opcMnuBuscarProducto;
     private javax.swing.JMenuItem opcMnuConsultarV;
     private javax.swing.JMenuItem opcMnuEdicionCategoria;
+    private javax.swing.JMenuItem opcMnuEdicionCategoria1;
     javax.swing.JMenuItem opcMnuEdicionProveedor;
     private javax.swing.JMenuItem opcMnuEliminarProducto;
     private javax.swing.JMenuItem opcMnuNuevaV;
