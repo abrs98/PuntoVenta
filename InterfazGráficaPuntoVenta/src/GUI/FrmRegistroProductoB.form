@@ -75,7 +75,13 @@
                                       <Component id="jComboBox2" alignment="0" min="-2" max="-2" attributes="0"/>
                                       <Component id="txtPrecio" alignment="0" min="-2" pref="42" max="-2" attributes="0"/>
                                       <Component id="txtNombre" alignment="0" min="-2" pref="198" max="-2" attributes="0"/>
-                                      <Component id="spnStock" alignment="0" min="-2" pref="47" max="-2" attributes="0"/>
+                                      <Group type="102" alignment="0" attributes="0">
+                                          <Component id="spnStock" min="-2" pref="47" max="-2" attributes="0"/>
+                                          <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
+                                          <Component id="lblStock3" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                          <Component id="jComboBox3" min="-2" max="-2" attributes="0"/>
+                                      </Group>
                                   </Group>
                                   <EmptySpace min="-2" pref="83" max="-2" attributes="0"/>
                               </Group>
@@ -122,6 +128,8 @@
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="lblStock" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="spnStock" alignment="3" min="-2" pref="25" max="-2" attributes="0"/>
+                      <Component id="lblStock3" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jComboBox3" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
@@ -206,7 +214,7 @@
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="0" green="0" red="0" type="rgb"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Clave"/>
+            <Property name="text" type="java.lang.String" value="Codigo"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="btnRegistrar">
@@ -366,6 +374,36 @@
             </Component>
           </SubComponents>
         </Container>
+        <Component class="javax.swing.JLabel" name="lblStock3">
+          <Properties>
+            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="0" green="0" red="0" type="rgb"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Medida"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="jComboBox3">
+          <Properties>
+            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="99" green="0" red="0" type="rgb"/>
+            </Property>
+            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="ff" green="ff" red="ff" type="rgb"/>
+            </Property>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+              <StringArray count="5">
+                <StringItem index="0" value="Seleccione"/>
+                <StringItem index="1" value="KG"/>
+                <StringItem index="2" value="LT"/>
+                <StringItem index="3" value="PZ"/>
+                <StringItem index="4" value="CAJA"/>
+              </StringArray>
+            </Property>
+          </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+          </AuxValues>
+        </Component>
       </SubComponents>
     </Container>
   </SubComponents>
