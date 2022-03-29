@@ -37,7 +37,7 @@ public class FrmRegistroProductoB extends javax.swing.JInternalFrame {
         initComponents();
 
     }
-    
+
     public String getNombre() {
         return nombre;
     }
@@ -69,7 +69,6 @@ public class FrmRegistroProductoB extends javax.swing.JInternalFrame {
     public void setStock(int stock) {
         this.stock = stock;
     }
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -99,6 +98,8 @@ public class FrmRegistroProductoB extends javax.swing.JInternalFrame {
         jComboBox2 = new javax.swing.JComboBox<>();
         jPanel3 = new javax.swing.JPanel();
         lblVenta = new java.awt.Label();
+        lblStock3 = new javax.swing.JLabel();
+        jComboBox3 = new javax.swing.JComboBox<>();
 
         setClosable(true);
         setTitle("Registro Producto");
@@ -149,7 +150,7 @@ public class FrmRegistroProductoB extends javax.swing.JInternalFrame {
         lblPrecio.setText("Precio");
 
         lblClave.setForeground(new java.awt.Color(0, 0, 0));
-        lblClave.setText("Clave");
+        lblClave.setText("Codigo");
 
         btnRegistrar.setBackground(new java.awt.Color(0, 24, 69));
         btnRegistrar.setFont(new java.awt.Font("Dialog", 1, 11)); // NOI18N
@@ -225,6 +226,13 @@ public class FrmRegistroProductoB extends javax.swing.JInternalFrame {
             .addComponent(lblVenta, javax.swing.GroupLayout.DEFAULT_SIZE, 59, Short.MAX_VALUE)
         );
 
+        lblStock3.setForeground(new java.awt.Color(0, 0, 0));
+        lblStock3.setText("Medida");
+
+        jComboBox3.setBackground(new java.awt.Color(0, 0, 153));
+        jComboBox3.setForeground(new java.awt.Color(255, 255, 255));
+        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione", "KG", "LT", "PZ", "CAJA" }));
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -253,7 +261,12 @@ public class FrmRegistroProductoB extends javax.swing.JInternalFrame {
                                     .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(txtPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(spnStock, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(spnStock, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(27, 27, 27)
+                                        .addComponent(lblStock3)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addGap(83, 83, 83))))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -287,7 +300,9 @@ public class FrmRegistroProductoB extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblStock)
-                    .addComponent(spnStock, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(spnStock, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblStock3)
+                    .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -337,24 +352,132 @@ public class FrmRegistroProductoB extends javax.swing.JInternalFrame {
 
     private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
         // TODO add your handling code here:
-        if(txtClave.getText().equals("")){
-            JOptionPane.showMessageDialog(null, "Ingrese la clave del producto", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }else if(txtNombre.getText().equals("")){
-            JOptionPane.showMessageDialog(null, "Ingrese el nombre del producto", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }else if(txtPrecio.getText().equals("")){
-            JOptionPane.showMessageDialog(null, "Ingrese el precio del producto", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }else if(spnStock.getValue().toString().equals("0")){
-            JOptionPane.showMessageDialog(null, "Ingrese el stock del producto", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
+        try {
+
+            Producto p = new Producto();
+
+            if (txtClave.getText().equals("")) {
+                JOptionPane.showMessageDialog(null, "Ingrese la clave del producto", "Error", JOptionPane.ERROR_MESSAGE);
+                txtClave.grabFocus();
+                return;
+            } else {
+                try {
+                    p.setClave(txtClave.getText());
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, e.getMessage());
+                }
+            }
+
+            if (txtNombre.getText().equals("")) {
+                JOptionPane.showMessageDialog(null, "Ingrese el nombre del producto", "Error", JOptionPane.ERROR_MESSAGE);
+                txtNombre.grabFocus();
+                return;
+            } else {
+                try {
+                    p.setNombre(txtNombre.getText());
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, e.getMessage());
+                }
+            }
+
+            if (txtPrecio.getText().equals("")) {
+                JOptionPane.showMessageDialog(null, "Ingrese el precio del producto", "Error", JOptionPane.ERROR_MESSAGE);
+                txtPrecio.grabFocus();
+                return;
+            } else {
+                try {
+                    float precio = Float.parseFloat(txtPrecio.getText());
+                    p.setPrecio(precio);
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, e.getMessage());
+                    return;
+                }
+            }
+
+            if (spnStock.getValue().toString().equals("0")) {
+                JOptionPane.showMessageDialog(null, "Ingrese el stock del producto", "Error", JOptionPane.ERROR_MESSAGE);
+                spnStock.grabFocus();
+                return;
+            } else {
+                try {
+                    float stk = Float.parseFloat(spnStock.getValue().toString());
+                    p.setStock(stk);
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, e.getMessage());
+                    return;
+                }
+            }
+        } catch (Exception e) {
         }
 
         nombre = txtNombre.getText();
         codigo = txtClave.getText();
-        precio= Float.parseFloat(txtPrecio.getText());
-        stock= Integer.parseInt(spnStock.getValue().toString());
+        precio = Float.parseFloat(txtPrecio.getText());
+        stock = Integer.parseInt(spnStock.getValue().toString());
+
+        if (cbxCategoria.getSelectedIndex() == 0) {
+            JOptionPane.showMessageDialog(null, "Seleccione la categoria del prducto");
+            return;
+        } else {
+            try {
+                String categoria = ((String) cbxCategoria.getSelectedItem());
+                List<Categoria> cats = CCategoria.consultarCategorias(categoria);
+
+                int idCat = 0;
+
+                for (int i = 0; i < cats.size(); i++) {
+                    if (cats.get(i).getNombre().equalsIgnoreCase(categoria)) {
+                        idCat = cats.get(i).getIdCategoria();
+                    }
+                }
+                if (idCat != 0) {
+                    Categoria cate = CCategoria.consultarPorIdCategoria(idCat);
+                    p.setIdCategoria(cate);
+                } else {
+                    JOptionPane.showMessageDialog(null, "No se encontro categoria");
+                    return;
+                }
+
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, e.getMessage());
+                return;
+            }
+        }
+
+        if (cbxProveedor.getSelectedIndex() == 0) {
+            JOptionPane.showMessageDialog(null, "Seleccione el proveedor del prducto");
+            return;
+        } else {
+            try {
+                String proveedor = ((String) cbxProveedor.getSelectedItem());
+                List<Proveedor> provs = CProveedor.consultarProveedores(proveedor);
+
+                int idProv = 0;
+
+                for (int i = 0; i < provs.size(); i++) {
+                    if (provs.get(i).getNombre().equalsIgnoreCase(proveedor)) {
+                        idProv = provs.get(i).getIdProveedor();
+                    }
+                }
+                if (idProv != 0) {
+                    Proveedor prove = CProveedor.consultarPorIdProveedor(idProv);
+                    p.setIdProveedor(prove);
+                } else {
+                    JOptionPane.showMessageDialog(null, "No se encontro proveedor");
+                    return;
+                }
+
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, e.getMessage());
+                return;
+            }
+        }
+
+        CProducto.guardarProducto(p);
+        CrearModelo();
+        Cargar_Informacion();
+        JOptionPane.showMessageDialog(null, "Producto guardado con éxito!! ID: " + p.getIdProducto());
+        this.dispose();
 
         this.dispose();
     }//GEN-LAST:event_btnRegistrarActionPerformed
@@ -374,12 +497,11 @@ public class FrmRegistroProductoB extends javax.swing.JInternalFrame {
 
     private void btnGenerarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerarActionPerformed
         // TODO add your handling code here:
-        FrmGeneradorCodigos codeGen= new FrmGeneradorCodigos();
+        FrmGeneradorCodigos codeGen = new FrmGeneradorCodigos();
         codeGen.setLocationRelativeTo(this);
         codeGen.setVisible(true);
     }//GEN-LAST:event_btnGenerarActionPerformed
 
-    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancelar;
@@ -388,6 +510,7 @@ public class FrmRegistroProductoB extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnRegistrar;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JComboBox<String> jComboBox2;
+    private javax.swing.JComboBox<String> jComboBox3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JLabel lblClave;
@@ -396,6 +519,7 @@ public class FrmRegistroProductoB extends javax.swing.JInternalFrame {
     private javax.swing.JLabel lblStock;
     private javax.swing.JLabel lblStock1;
     private javax.swing.JLabel lblStock2;
+    private javax.swing.JLabel lblStock3;
     private java.awt.Label lblVenta;
     private javax.swing.JSpinner spnStock;
     private javax.swing.JTextField txtClave;
