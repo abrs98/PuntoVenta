@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Entidades;
+package entidades;
 
 import java.io.Serializable;
 import java.util.List;
@@ -118,7 +118,7 @@ public class Categoria implements Serializable {
 
     @Override
     public String toString() {
-        return "Entidades.Categoria[ idCategoria=" + idCategoria + " ]";
+        return "entidades.Categoria[ idCategoria=" + idCategoria + " ]";
     }
     
 }

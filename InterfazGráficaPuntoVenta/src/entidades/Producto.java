@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Entidades;
+package entidades;
 
 import java.io.Serializable;
 import java.util.List;
@@ -11,8 +11,6 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
@@ -33,20 +31,18 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Producto.findAll", query = "SELECT p FROM Producto p")
-    , @NamedQuery(name = "Producto.findByIdProducto", query = "SELECT p FROM Producto p WHERE p.idProducto = :idProducto")
+    , @NamedQuery(name = "Producto.findByCodigo", query = "SELECT p FROM Producto p WHERE p.codigo = :codigo")
     , @NamedQuery(name = "Producto.findByNombre", query = "SELECT p FROM Producto p WHERE p.nombre = :nombre")
     , @NamedQuery(name = "Producto.findByPrecio", query = "SELECT p FROM Producto p WHERE p.precio = :precio")
     , @NamedQuery(name = "Producto.findByStock", query = "SELECT p FROM Producto p WHERE p.stock = :stock")
-    , @NamedQuery(name = "Producto.findByCodigoBarra", query = "SELECT p FROM Producto p WHERE p.codigoBarra = :codigoBarra")
     , @NamedQuery(name = "Producto.findByUnidadMedida", query = "SELECT p FROM Producto p WHERE p.unidadMedida = :unidadMedida")})
 public class Producto implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "id_producto")
-    private Integer idProducto;
+    @Column(name = "codigo")
+    private String codigo;
     @Basic(optional = false)
     @Column(name = "nombre")
     private String nombre;
@@ -56,9 +52,6 @@ public class Producto implements Serializable {
     @Basic(optional = false)
     @Column(name = "stock")
     private float stock;
-    @Basic(optional = false)
-    @Column(name = "codigo_barra")
-    private String codigoBarra;
     @Basic(optional = false)
     @Column(name = "unidad_medida")
     private String unidadMedida;
@@ -78,25 +71,24 @@ public class Producto implements Serializable {
     public Producto() {
     }
 
-    public Producto(Integer idProducto) {
-        this.idProducto = idProducto;
+    public Producto(String codigo) {
+        this.codigo = codigo;
     }
 
-    public Producto(Integer idProducto, String nombre, float precio, float stock, String codigoBarra, String unidadMedida) {
-        this.idProducto = idProducto;
+    public Producto(String codigo, String nombre, float precio, float stock, String unidadMedida) {
+        this.codigo = codigo;
         this.nombre = nombre;
         this.precio = precio;
         this.stock = stock;
-        this.codigoBarra = codigoBarra;
         this.unidadMedida = unidadMedida;
     }
 
-    public Integer getIdProducto() {
-        return idProducto;
+    public String getCodigo() {
+        return codigo;
     }
 
-    public void setIdProducto(Integer idProducto) {
-        this.idProducto = idProducto;
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
     }
 
     public String getNombre() {
@@ -121,14 +113,6 @@ public class Producto implements Serializable {
 
     public void setStock(float stock) {
         this.stock = stock;
-    }
-
-    public String getCodigoBarra() {
-        return codigoBarra;
-    }
-
-    public void setCodigoBarra(String codigoBarra) {
-        this.codigoBarra = codigoBarra;
     }
 
     public String getUnidadMedida() {
@@ -167,7 +151,7 @@ public class Producto implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (idProducto != null ? idProducto.hashCode() : 0);
+        hash += (codigo != null ? codigo.hashCode() : 0);
         return hash;
     }
 
@@ -178,7 +162,7 @@ public class Producto implements Serializable {
             return false;
         }
         Producto other = (Producto) object;
-        if ((this.idProducto == null && other.idProducto != null) || (this.idProducto != null && !this.idProducto.equals(other.idProducto))) {
+        if ((this.codigo == null && other.codigo != null) || (this.codigo != null && !this.codigo.equals(other.codigo))) {
             return false;
         }
         return true;
@@ -186,7 +170,7 @@ public class Producto implements Serializable {
 
     @Override
     public String toString() {
-        return "Entidades.Producto[ idProducto=" + idProducto + " ]";
+        return "entidades.Producto[ codigo=" + codigo + " ]";
     }
     
 }

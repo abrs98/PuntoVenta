@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Entidades;
+package entidades;
 
 import java.io.Serializable;
 import javax.persistence.Basic;
@@ -50,7 +50,7 @@ public class ProductoVenta implements Serializable {
     @Basic(optional = false)
     @Column(name = "importe")
     private float importe;
-    @JoinColumn(name = "id_producto", referencedColumnName = "id_producto")
+    @JoinColumn(name = "id_producto", referencedColumnName = "codigo")
     @ManyToOne(optional = false)
     private Producto idProducto;
     @JoinColumns({
@@ -143,7 +143,7 @@ public class ProductoVenta implements Serializable {
 
     @Override
     public String toString() {
-        return "Entidades.ProductoVenta[ idProductoVenta=" + idProductoVenta + " ]";
+        return "entidades.ProductoVenta[ idProductoVenta=" + idProductoVenta + " ]";
     }
     
 }

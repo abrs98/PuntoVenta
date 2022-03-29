@@ -7,6 +7,7 @@ package GUI;
 
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -91,16 +92,18 @@ public class FrmAdministrador extends javax.swing.JFrame {
         setLocation(new java.awt.Point(300, 60));
 
         escritorio.setBackground(new java.awt.Color(4, 102, 200));
+        escritorio.setBorder(new javax.swing.border.MatteBorder(null));
+        escritorio.setPreferredSize(new java.awt.Dimension(720, 615));
 
         javax.swing.GroupLayout escritorioLayout = new javax.swing.GroupLayout(escritorio);
         escritorio.setLayout(escritorioLayout);
         escritorioLayout.setHorizontalGroup(
             escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 720, Short.MAX_VALUE)
+            .addGap(0, 718, Short.MAX_VALUE)
         );
         escritorioLayout.setVerticalGroup(
             escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 594, Short.MAX_VALUE)
+            .addGap(0, 613, Short.MAX_VALUE)
         );
 
         mnuAdm.setMnemonic('f');
@@ -242,7 +245,7 @@ public class FrmAdministrador extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(escritorio)
+            .addComponent(escritorio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -306,8 +309,15 @@ public class FrmAdministrador extends javax.swing.JFrame {
     }//GEN-LAST:event_opcMnuEliminarProductoActionPerformed
 
     private void opcMnuRegistrarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_opcMnuRegistrarProductoActionPerformed
-        FrmRegistroProductoB p = new FrmRegistroProductoB();
-       escritorio.add(p).setVisible(true);
+        try {
+            FrmRegistroProductoB p = new FrmRegistroProductoB();
+            escritorio.add(p).setVisible(true);
+            p.setLocation(escritorio.getWidth()/5, escritorio.getHeight()/7);
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        }
+        
     }//GEN-LAST:event_opcMnuRegistrarProductoActionPerformed
 
     private void opcMnuEdicionCategoria1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_opcMnuEdicionCategoria1ActionPerformed

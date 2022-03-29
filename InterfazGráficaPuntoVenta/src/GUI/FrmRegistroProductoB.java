@@ -5,6 +5,12 @@
  */
 package GUI;
 
+import control.ControlCategoria;
+import control.ControlProducto;
+import control.ControlProveedor;
+import entidades.Categoria;
+import entidades.Producto;
+import entidades.Proveedor;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -29,12 +35,20 @@ public class FrmRegistroProductoB extends javax.swing.JInternalFrame {
     String codigo;
     float precio;
     int stock;
+    ControlProducto CProducto = new ControlProducto();
+    ControlCategoria CCategoria = new ControlCategoria();
+    ControlProveedor CProveedor = new ControlProveedor();
 
     /**
      * Creates new form FrmVentas
      */
     public FrmRegistroProductoB() {
         initComponents();
+        try {
+            fillComboCategoria();
+            fillComboProveedor();
+        } catch (Exception e) {
+        }
 
     }
 
@@ -70,6 +84,50 @@ public class FrmRegistroProductoB extends javax.swing.JInternalFrame {
         this.stock = stock;
     }
 
+    private void fillComboCategoria() throws Exception {
+
+        List<Categoria> categorias = CCategoria.consultarCategorias(null);
+        for (int i = 0; i < cbxCategoria.getItemCount(); i++) {
+            cbxCategoria.removeItemAt(i);
+            cbxCategoria.removeAllItems();
+        }
+
+        try {
+            cbxCategoria.addItem("Seleccionar");
+
+            for (int i = 0; i < categorias.size(); i++) {
+                String formato = categorias.get(i).getNombre();
+                cbxCategoria.addItem(formato);
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        }
+
+    }
+
+    private void fillComboProveedor() throws Exception {
+
+        List<Proveedor> proveedores = CProveedor.consultarProveedores(null);
+        for (int i = 0; i < cbxProveedor.getItemCount(); i++) {
+            cbxProveedor.removeItemAt(i);
+            cbxProveedor.removeAllItems();
+        }
+
+        try {
+            cbxProveedor.addItem("Seleccionar");
+
+            for (int i = 0; i < proveedores.size(); i++) {
+                String formato = proveedores.get(i).getNombre();
+                cbxProveedor.addItem(formato);
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        }
+
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -92,14 +150,14 @@ public class FrmRegistroProductoB extends javax.swing.JInternalFrame {
         btnLimpiar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
         btnGenerar = new javax.swing.JButton();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        cbxCategoria = new javax.swing.JComboBox<>();
         lblStock1 = new javax.swing.JLabel();
         lblStock2 = new javax.swing.JLabel();
-        jComboBox2 = new javax.swing.JComboBox<>();
+        cbxProveedor = new javax.swing.JComboBox<>();
         jPanel3 = new javax.swing.JPanel();
         lblVenta = new java.awt.Label();
         lblStock3 = new javax.swing.JLabel();
-        jComboBox3 = new javax.swing.JComboBox<>();
+        cbxMedida = new javax.swing.JComboBox<>();
 
         setClosable(true);
         setTitle("Registro Producto");
@@ -116,21 +174,18 @@ public class FrmRegistroProductoB extends javax.swing.JInternalFrame {
         jPanel1.setBackground(new java.awt.Color(151, 157, 172));
         jPanel1.setForeground(new java.awt.Color(255, 255, 255));
 
-        txtNombre.setText("Coca Cola 600 ml");
         txtNombre.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtNombreActionPerformed(evt);
             }
         });
 
-        txtPrecio.setText("17.5");
         txtPrecio.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtPrecioActionPerformed(evt);
             }
         });
 
-        txtClave.setText("7235643958492");
         txtClave.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtClaveActionPerformed(evt);
@@ -192,9 +247,9 @@ public class FrmRegistroProductoB extends javax.swing.JInternalFrame {
             }
         });
 
-        jComboBox1.setBackground(new java.awt.Color(0, 0, 153));
-        jComboBox1.setForeground(new java.awt.Color(255, 255, 255));
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Bebidas" }));
+        cbxCategoria.setBackground(new java.awt.Color(0, 0, 153));
+        cbxCategoria.setForeground(new java.awt.Color(255, 255, 255));
+        cbxCategoria.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Bebidas" }));
 
         lblStock1.setForeground(new java.awt.Color(0, 0, 0));
         lblStock1.setText("Categoria");
@@ -202,9 +257,9 @@ public class FrmRegistroProductoB extends javax.swing.JInternalFrame {
         lblStock2.setForeground(new java.awt.Color(0, 0, 0));
         lblStock2.setText("Proveedor");
 
-        jComboBox2.setBackground(new java.awt.Color(0, 0, 153));
-        jComboBox2.setForeground(new java.awt.Color(255, 255, 255));
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Grupo Arca Continental" }));
+        cbxProveedor.setBackground(new java.awt.Color(0, 0, 153));
+        cbxProveedor.setForeground(new java.awt.Color(255, 255, 255));
+        cbxProveedor.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Grupo Arca Continental" }));
 
         jPanel3.setBackground(new java.awt.Color(0, 40, 85));
 
@@ -229,9 +284,9 @@ public class FrmRegistroProductoB extends javax.swing.JInternalFrame {
         lblStock3.setForeground(new java.awt.Color(0, 0, 0));
         lblStock3.setText("Medida");
 
-        jComboBox3.setBackground(new java.awt.Color(0, 0, 153));
-        jComboBox3.setForeground(new java.awt.Color(255, 255, 255));
-        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione", "KG", "LT", "PZ", "CAJA" }));
+        cbxMedida.setBackground(new java.awt.Color(0, 0, 153));
+        cbxMedida.setForeground(new java.awt.Color(255, 255, 255));
+        cbxMedida.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione", "KG", "LT", "PZ", "CAJA" }));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -257,8 +312,8 @@ public class FrmRegistroProductoB extends javax.swing.JInternalFrame {
                                 .addGap(33, 33, 33))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(cbxCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(cbxProveedor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(txtPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -266,7 +321,7 @@ public class FrmRegistroProductoB extends javax.swing.JInternalFrame {
                                         .addGap(27, 27, 27)
                                         .addComponent(lblStock3)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addComponent(cbxMedida, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addGap(83, 83, 83))))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -302,15 +357,15 @@ public class FrmRegistroProductoB extends javax.swing.JInternalFrame {
                     .addComponent(lblStock)
                     .addComponent(spnStock, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblStock3)
-                    .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cbxMedida, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cbxCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblStock1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblStock2)
-                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cbxProveedor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(40, 40, 40)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnRegistrar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -335,7 +390,7 @@ public class FrmRegistroProductoB extends javax.swing.JInternalFrame {
 
     private void formAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_formAncestorAdded
         // TODO add your handling code here:
-        JOptionPane.showMessageDialog(null, "Seccion para registrar ventas");
+        JOptionPane.showMessageDialog(null, "Seccion para registrar productos");
     }//GEN-LAST:event_formAncestorAdded
 
     private void txtNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNombreActionPerformed
@@ -362,7 +417,7 @@ public class FrmRegistroProductoB extends javax.swing.JInternalFrame {
                 return;
             } else {
                 try {
-                    p.setClave(txtClave.getText());
+                    p.setCodigo(txtClave.getText());
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(null, e.getMessage());
                 }
@@ -407,79 +462,93 @@ public class FrmRegistroProductoB extends javax.swing.JInternalFrame {
                     return;
                 }
             }
+
+            if (cbxMedida.getSelectedIndex() == 0) {
+                JOptionPane.showMessageDialog(null, "Seleccione la medida del prducto");
+                cbxMedida.grabFocus();
+                return;
+            } else {
+                try {
+                    String medida = ((String) cbxMedida.getSelectedItem());
+                    p.setUnidadMedida(medida);
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, e.getMessage());
+                    return;
+                }
+            }
+
+            nombre = txtNombre.getText();
+            codigo = txtClave.getText();
+            precio = Float.parseFloat(txtPrecio.getText());
+            stock = Integer.parseInt(spnStock.getValue().toString());
+
+            if (cbxCategoria.getSelectedIndex() == 0) {
+                JOptionPane.showMessageDialog(null, "Seleccione la categoria del prducto");
+                return;
+            } else {
+                try {
+                    String categoria = ((String) cbxCategoria.getSelectedItem());
+                    List<Categoria> cats = CCategoria.consultarCategorias(categoria);
+
+                    int idCat = 0;
+
+                    for (int i = 0; i < cats.size(); i++) {
+                        if (cats.get(i).getNombre().equalsIgnoreCase(categoria)) {
+                            idCat = cats.get(i).getIdCategoria();
+                        }
+                    }
+                    if (idCat != 0) {
+                        Categoria cate = CCategoria.consultarPorIdCategoria(idCat);
+                        p.setCategoria(cate);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "No se encontro categoria");
+                        return;
+                    }
+
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, e.getMessage());
+                    return;
+                }
+            }
+
+            if (cbxProveedor.getSelectedIndex() == 0) {
+                JOptionPane.showMessageDialog(null, "Seleccione el proveedor del prducto");
+                return;
+            } else {
+                try {
+                    String proveedor = ((String) cbxProveedor.getSelectedItem());
+                    List<Proveedor> provs = CProveedor.consultarProveedores(proveedor);
+
+                    int idProv = 0;
+
+                    for (int i = 0; i < provs.size(); i++) {
+                        if (provs.get(i).getNombre().equalsIgnoreCase(proveedor)) {
+                            idProv = provs.get(i).getIdProveedor();
+                        }
+                    }
+                    if (idProv != 0) {
+                        Proveedor prove = CProveedor.consultarPorIdProveedor(idProv);
+                        p.setProveedor(prove);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "No se encontro proveedor");
+                        return;
+                    }
+
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, e.getMessage());
+                    return;
+                }
+            }
+
+            CProducto.guardarProducto(p);
+            //CrearModelo();
+            // Cargar_Informacion();
+            JOptionPane.showMessageDialog(null, "Producto guardado con éxito!! Codigo: " + p.getCodigo());
+            this.dispose();
+
         } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
         }
-
-        nombre = txtNombre.getText();
-        codigo = txtClave.getText();
-        precio = Float.parseFloat(txtPrecio.getText());
-        stock = Integer.parseInt(spnStock.getValue().toString());
-
-        if (cbxCategoria.getSelectedIndex() == 0) {
-            JOptionPane.showMessageDialog(null, "Seleccione la categoria del prducto");
-            return;
-        } else {
-            try {
-                String categoria = ((String) cbxCategoria.getSelectedItem());
-                List<Categoria> cats = CCategoria.consultarCategorias(categoria);
-
-                int idCat = 0;
-
-                for (int i = 0; i < cats.size(); i++) {
-                    if (cats.get(i).getNombre().equalsIgnoreCase(categoria)) {
-                        idCat = cats.get(i).getIdCategoria();
-                    }
-                }
-                if (idCat != 0) {
-                    Categoria cate = CCategoria.consultarPorIdCategoria(idCat);
-                    p.setIdCategoria(cate);
-                } else {
-                    JOptionPane.showMessageDialog(null, "No se encontro categoria");
-                    return;
-                }
-
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, e.getMessage());
-                return;
-            }
-        }
-
-        if (cbxProveedor.getSelectedIndex() == 0) {
-            JOptionPane.showMessageDialog(null, "Seleccione el proveedor del prducto");
-            return;
-        } else {
-            try {
-                String proveedor = ((String) cbxProveedor.getSelectedItem());
-                List<Proveedor> provs = CProveedor.consultarProveedores(proveedor);
-
-                int idProv = 0;
-
-                for (int i = 0; i < provs.size(); i++) {
-                    if (provs.get(i).getNombre().equalsIgnoreCase(proveedor)) {
-                        idProv = provs.get(i).getIdProveedor();
-                    }
-                }
-                if (idProv != 0) {
-                    Proveedor prove = CProveedor.consultarPorIdProveedor(idProv);
-                    p.setIdProveedor(prove);
-                } else {
-                    JOptionPane.showMessageDialog(null, "No se encontro proveedor");
-                    return;
-                }
-
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, e.getMessage());
-                return;
-            }
-        }
-
-        CProducto.guardarProducto(p);
-        CrearModelo();
-        Cargar_Informacion();
-        JOptionPane.showMessageDialog(null, "Producto guardado con éxito!! ID: " + p.getIdProducto());
-        this.dispose();
-
-        this.dispose();
     }//GEN-LAST:event_btnRegistrarActionPerformed
 
     private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
@@ -508,9 +577,9 @@ public class FrmRegistroProductoB extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnGenerar;
     private javax.swing.JButton btnLimpiar;
     private javax.swing.JButton btnRegistrar;
-    private javax.swing.JComboBox<String> jComboBox1;
-    private javax.swing.JComboBox<String> jComboBox2;
-    private javax.swing.JComboBox<String> jComboBox3;
+    private javax.swing.JComboBox<String> cbxCategoria;
+    private javax.swing.JComboBox<String> cbxMedida;
+    private javax.swing.JComboBox<String> cbxProveedor;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JLabel lblClave;
