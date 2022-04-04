@@ -5,6 +5,14 @@
  */
 package GUI;
 
+import control.ControlProducto;
+import control.ControlProductoVenta;
+import control.ControlUsuario;
+import control.ControlVenta;
+import entidades.Producto;
+import entidades.ProductoVenta;
+import entidades.Usuario;
+import entidades.Venta;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -15,6 +23,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.persistence.PersistenceException;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -26,8 +35,18 @@ public class FrmRegistroVentas extends javax.swing.JInternalFrame {
 
     // Atributos Heredados de las ventanas principales
     String tipoUsuario;
-    int idAdmin;
+    int idAdmin = 1;
     int idCajero;
+
+    //Controladores de prouctos y ventas
+    ControlProducto CProducto = new ControlProducto();
+    ControlProductoVenta CProductoVenta = new ControlProductoVenta();
+    ControlVenta CVenta = new ControlVenta();
+    ControlUsuario CUsuario = new ControlUsuario();
+
+    List<ProductoVenta> productosVenta = new ArrayList<>();
+
+    Venta venta = new Venta();
 
     float total = 0;
     float subtotal = 0;
@@ -373,18 +392,69 @@ public class FrmRegistroVentas extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
         if (JOptionPane.showConfirmDialog(this, "¿Está seguro que desea terminar la venta?", "Confirmación", 2) == 0) {
 
-            
+            if (TblListaVenta.getRowCount() > 0) {
+                try {
 
+                    //Verificar si algun producto tiene promocion
+
+                    //Agregar la venta a la base de datos\
+                    venta.setTotal(total);
+
+                    GregorianCalendar fecha = new GregorianCalendar();
+
+                    venta.setFecha(fecha.getTime());
+
+                    Usuario user = CUsuario.consultarPorIdUsuario(1);
+                    System.out.println("Usuario > "+user.getIdUsuario());
+                    venta.setIdUsuario(user);
+
+                    //                    venta.setProductoVentaList(productosVenta);
+                    CVenta.guardarVenta(venta);
+
+                    System.out.println("ID Venta: " + venta.getIdVenta());
+
+                    //Agregar productos de venta a la base de datos
+                    for (int i = 0; i < productosVenta.size(); i++) {
+
+                        ProductoVenta v = productosVenta.get(i);
+                        Producto p = CProducto.consultarPorCodigo(productosVenta.get(i).getIdProducto().getCodigo());
+                        float cantidad = v.getCantidad();
+                        p.setStock(p.getStock()- cantidad);
+
+                        v.setVenta(venta);
+                        
+                        System.out.println(v.getVenta());
+
+                        try {
+                            CProducto.actualizarProducto(p);
+
+                        } catch (PersistenceException e) {
+                            JOptionPane.showMessageDialog(null, e.getMessage());
+                        }
+                        try {
+                            CProductoVenta.guardarProductoVenta(v);
+
+                        } catch (PersistenceException e) {
+                            JOptionPane.showMessageDialog(null, e.getMessage());
+                        }
+
+                    }
+                    
                     JOptionPane.showMessageDialog(this, "Venta finalizada con éxito. Folio: "
-                            + 123 + " Total: " + 203.4, "Venta finalizada", JOptionPane.INFORMATION_MESSAGE);
+                            + venta.getIdVenta() + " Total: " + venta.getTotal(), "Venta finalizada", JOptionPane.INFORMATION_MESSAGE);
 
-                    
-                    
+
                     txtClaveProducto.setText("");
                     txtCantidad.setText("");
                     txtClaveProducto.grabFocus();
 
                     this.dispose();
+
+                } catch (PersistenceException e) {
+                    JOptionPane.showMessageDialog(null, "Ocurrio un error al hacer la venta " + e.getMessage(), "Lo sentimos", JOptionPane.ERROR_MESSAGE);
+                } catch (Exception ex) {
+                    Logger.getLogger(FrmRegistroVentas.class.getName()).log(Level.SEVERE, null, ex);
+                }
 
             } else {
                 JOptionPane.showMessageDialog(null, "Lista de venta vacia, agregue Productos");
@@ -393,12 +463,153 @@ public class FrmRegistroVentas extends javax.swing.JInternalFrame {
                 txtClaveProducto.grabFocus();
 
             }
-
-        
+        }
     }//GEN-LAST:event_BtnTerminarActionPerformed
 
     private void BtnAgregarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnAgregarProductoActionPerformed
-       
+        if (txtClaveProducto.getText().equals("") || txtCantidad.getText().equals("")) {
+            JOptionPane.showMessageDialog(this, "Favor de llenar todos los campos");
+        } else {
+
+            DefaultTableModel modelo = (DefaultTableModel) TblListaVenta.getModel();
+            Producto producto;
+
+            //Sección 2
+            Object[] fila = new Object[3];
+            String claveProducto = "";
+            float cantidad = 0;
+
+            try {
+                //Inicializar parametros de agregar producto
+                claveProducto = txtClaveProducto.getText();
+                cantidad = Float.parseFloat(txtCantidad.getText());
+
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Llenado fallido de los campos, intente de nuevo.", "Error", JOptionPane.ERROR_MESSAGE);
+                txtClaveProducto.setText("");
+                txtCantidad.setText("");
+                txtClaveProducto.grabFocus();
+                return;
+
+            }
+            //Verificar que el producto exista
+            if (CProducto.consultarPorCodigo(claveProducto) != null) {
+                if (CProducto.consultarPorCodigo(claveProducto).getStock() < cantidad) {
+                    JOptionPane.showMessageDialog(this, "No se cuenta con suficientes articulos de este producto", "Error", JOptionPane.ERROR_MESSAGE);
+                } else {
+
+                    //Cr
+                    producto = CProducto.consultarPorCodigo(claveProducto);
+
+                    String nombreProducto = "";
+                    float precioUnitario = 0.0f;
+
+                    try {
+                        nombreProducto = producto.getNombre();
+                    } catch (Exception e) {
+                        JOptionPane.showMessageDialog(this, "No se encontro el nombre del producto con la clave solicitada");
+                        return;
+                    }
+
+                    try {
+
+                        precioUnitario = producto.getPrecio();
+                    } catch (Exception e) {
+                        JOptionPane.showMessageDialog(this, "No se encontro el precio unitario del producto con la clave solicitada");
+                        return;
+
+                    }
+
+                    //Sección 3
+                    fila[0] = txtCantidad.getText();
+                    fila[1] = nombreProducto;
+                    fila[2] = precioUnitario;
+
+                    //Sección 4
+                    //Sección 5
+                    // Almacenamiento de los detalles del producto vendido
+                    ProductoVenta p = new ProductoVenta();
+                    p.setCantidad((int) cantidad);
+                    p.setIdProducto(producto);
+                    p.setImporte(cantidad*p.getIdProducto().getPrecio());
+                    p.setPrecio(p.getIdProducto().getPrecio());
+
+                    //Validacion de que no se repitan los productos
+                    int productoIgual = 0;
+
+                    for (int i = 0; i < productosVenta.size(); i++) {
+                        ProductoVenta prodLista = productosVenta.get(i);
+
+                        if (prodLista.getIdProducto() == p.getIdProducto()) {
+
+                            productoIgual = 1;
+                            float sumaCantidades = prodLista.getCantidad() + p.getCantidad();
+                            float sumaImportes = prodLista.getImporte() + p.getImporte();
+
+                            if (sumaCantidades <= p.getIdProducto().getStock()) {
+
+                                p.setCantidad(sumaCantidades);
+                                p.setImporte(sumaImportes);
+                                productosVenta.remove(i);
+                                JOptionPane.showMessageDialog(null, "Las cantidaes de los productos repetidos han sido sumadas");
+                                break;
+                            } else {
+                                JOptionPane.showMessageDialog(null, "No puede agregar este producto de nuevo, no hay suficiente stock");
+                                return;
+                            }
+                        }
+
+                    }
+
+                    productosVenta.add(p);
+
+                    subtotal += precioUnitario * cantidad;
+                    total = subtotal;
+
+                    txtTotal.setText(Float.toString(total));
+
+                    txtClaveProducto.setText("");
+                    txtCantidad.setText("");
+                    txtClaveProducto.grabFocus();
+
+                    if (productoIgual == 0) {
+                        modelo.addRow(fila);
+                        TblListaVenta.setModel(modelo);
+                    } else {
+
+                        for (int i = 0; i < TblListaVenta.getRowCount(); i++) {
+                            if (TblListaVenta.getValueAt(i, 1).toString().equalsIgnoreCase(p.getIdProducto().getNombre())) {
+
+                                TblListaVenta.setValueAt(p.getCantidad(), i, 0);
+                                break;
+                            }
+                        }
+
+                        JOptionPane.showMessageDialog(null, "Productos repetidos, se actualizó la cantidad en la lista",
+                                "Informacion", JOptionPane.INFORMATION_MESSAGE);
+                    }
+
+                }
+            } else {
+
+                //                JOptionPane.showMessageDialog(this, "Producto no encontrado, ingrese una clave valida",
+                //                        "Error", JOptionPane.ERROR_MESSAGE);
+                if (JOptionPane.showConfirmDialog(null, "Producto no encontrado, desea registrarlo? (ADMINISTRADOR)") == 0) {
+
+//                    Usuario user = CUsuario.consultarPorIdUsuario(idAdmin);
+//                    if (user != null&&user.getAdministrador()) {
+                    FrmRegistroProductoB p = new FrmRegistroProductoB();
+                    this.escritorio.add(p).setVisible(true);
+//
+//                    } else {
+//                        JOptionPane.showMessageDialog(this, "No puede registrar un producto",
+//                                "Error", JOptionPane.ERROR_MESSAGE);
+//                    }
+
+                }
+
+            }
+        }
     }//GEN-LAST:event_BtnAgregarProductoActionPerformed
 
     private void txtClaveProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtClaveProductoActionPerformed
@@ -422,7 +633,6 @@ public class FrmRegistroVentas extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_btnCancelar1ActionPerformed
 
-    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BtnAgregarProducto;

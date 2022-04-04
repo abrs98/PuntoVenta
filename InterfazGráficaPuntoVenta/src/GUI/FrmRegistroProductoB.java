@@ -557,6 +557,9 @@ public class FrmRegistroProductoB extends javax.swing.JInternalFrame {
         txtNombre.setText("");
         txtPrecio.setText("");
         spnStock.setValue(0);
+        cbxMedida.setSelectedIndex(0);
+        cbxCategoria.setSelectedIndex(0);
+        cbxProveedor.setSelectedIndex(0);
     }//GEN-LAST:event_btnLimpiarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed

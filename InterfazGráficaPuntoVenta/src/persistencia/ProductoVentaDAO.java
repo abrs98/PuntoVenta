@@ -12,39 +12,40 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import entidades.Proveedor;
+import entidades.ProductoVenta;
 
 /**
  *
  * @author Abrahan Barrios
  */
-public class ProveedorDAO extends BaseDAO<Proveedor>{
+public class ProductoVentaDAO extends BaseDAO<ProductoVenta>{
    EntityManager entityManager = getEntityManager();
 
-   @Override 
-   public boolean insert(Proveedor proveedor) {
+    @Override
+    public boolean insert(ProductoVenta productoVenta) {
         //            INSERCIÓN
         entityManager.getTransaction().begin();
-        if (proveedor != null) {
-            entityManager.persist(proveedor);
+        if (productoVenta != null) {
+            entityManager.persist(productoVenta);
         } else {
             return false;
         }
         entityManager.getTransaction().commit();
         return true;
     }
-@Override
-    public boolean update(Proveedor proveedor) {
+
+    @Override
+    public boolean update(ProductoVenta productoVenta) {
         //       FIND BY ID AND UPDATE
         entityManager.getTransaction().begin();
-        Proveedor update = entityManager.find(Proveedor.class, proveedor.getIdProveedor());
+        ProductoVenta update = entityManager.find(ProductoVenta.class, productoVenta.getIdProductoVenta());
         if (update != null) {
-            update.setNombre(proveedor.getNombre());
-            update.setDireccion(proveedor.getDireccion());
-            update.setTelefono(proveedor.getTelefono());
-            update.setCorreo(proveedor.getCorreo());
-            update.setDescripcion(proveedor.getDescripcion());
-            update.setProductoList(proveedor.getProductoList());
+            update.setVenta(productoVenta.getVenta());
+            update.setCantidad(productoVenta.getCantidad());
+            update.setPrecio(productoVenta.getPrecio());
+            update.setImporte(productoVenta.getImporte());
+            update.setIdProducto(productoVenta.getIdProducto());
+            
             entityManager.persist(update);
         } else {
             return false;
@@ -52,12 +53,12 @@ public class ProveedorDAO extends BaseDAO<Proveedor>{
         entityManager.getTransaction().commit();
         return true;
     }
-    
+
     @Override
-    public boolean remove(Proveedor proveedor) {
+    public boolean remove(ProductoVenta productoVenta) {
         //      REMOVE
         entityManager.getTransaction().begin();
-        Proveedor remove = entityManager.find(Proveedor.class, proveedor.getIdProveedor());
+        ProductoVenta remove = entityManager.find(ProductoVenta.class, productoVenta.getIdProductoVenta());
         if (remove != null) {
             entityManager.remove(remove);
         } else {
@@ -67,26 +68,10 @@ public class ProveedorDAO extends BaseDAO<Proveedor>{
         return true;
     }
 
-    
-   @Override
-    public Proveedor findById(Object id) {
-        //       FIND BY ID AND UPDATE
-        entityManager.getTransaction().begin();
-
-        Proveedor update = entityManager.find(Proveedor.class, id);
-        if (update != null) {
-             entityManager.getTransaction().commit();
-            return update;
-            
-        } 
-       entityManager.getTransaction().commit();
-       return null;
-    }
-    
    
-    
+
     @Override
-    public List<Proveedor> find(String busqueda) {
+    public List<ProductoVenta> find(String busqueda) {
         //          Consulta de datos
         entityManager.getTransaction().begin();
         if (busqueda == null || busqueda.isEmpty()) {
@@ -94,23 +79,46 @@ public class ProveedorDAO extends BaseDAO<Proveedor>{
             //se crea el constructor de consultas
             CriteriaQuery criteria = entityManager.getCriteriaBuilder().createQuery();
             //se construye el objeto de consultas
-            criteria.select(criteria.from(Proveedor.class));
+            criteria.select(criteria.from(ProductoVenta.class));
             //creación de la consulta lista para ejecutarse
             Query query = entityManager.createQuery(criteria);
             //ejecución del query y retorno de resultados
-            List<Proveedor> proveedores = query.getResultList();
+            List<ProductoVenta> productosVenta = query.getResultList();
             entityManager.getTransaction().commit();
-            return proveedores;
+            return productosVenta;
         } else {
             CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-            CriteriaQuery criteria = builder.createQuery(Proveedor.class);
-            Root root = criteria.from(Proveedor.class);
+            CriteriaQuery criteria = builder.createQuery(ProductoVenta.class);
+            Root root = criteria.from(ProductoVenta.class);
             criteria = criteria.select(root).where(builder.like(root.get("nombre"), "%"+busqueda+"%"));
             TypedQuery query = entityManager.createQuery(criteria);
-            List<Proveedor> proveedores = query.getResultList();
+            List<ProductoVenta> productosVenta = query.getResultList();
             entityManager.getTransaction().commit();
-            return proveedores;
+            return productosVenta;
         }
     }
 
+    /**
+     *
+     * @param id
+     * @return
+     */
+    public ProductoVenta findById(Object id) { 
+        // FIND BY ID AND UPDATE
+        entityManager.getTransaction().begin();
+        
+        ProductoVenta find = entityManager.find(ProductoVenta.class, id);
+        if (find!= null){
+            entityManager.getTransaction().commit();
+            return find;
+        }       
+        entityManager.getTransaction().commit();
+        return null;
+        
+        }
+
 }
+    
+    
+   
+

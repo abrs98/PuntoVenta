@@ -28,6 +28,7 @@ CREATE TABLE IF NOT EXISTS `negocio_ventas`.`categoria` (
   UNIQUE INDEX `id_categoria_UNIQUE` (`id_categoria` ASC) VISIBLE,
   UNIQUE INDEX `nombre_UNIQUE` (`nombre` ASC) VISIBLE)
 ENGINE = InnoDB
+AUTO_INCREMENT = 3
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
@@ -49,6 +50,7 @@ CREATE TABLE IF NOT EXISTS `negocio_ventas`.`proveedor` (
   UNIQUE INDEX `direccion_UNIQUE` (`direccion` ASC) VISIBLE,
   UNIQUE INDEX `correo_UNIQUE` (`correo` ASC) VISIBLE)
 ENGINE = InnoDB
+AUTO_INCREMENT = 7
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
@@ -92,6 +94,7 @@ CREATE TABLE IF NOT EXISTS `negocio_ventas`.`usuario` (
   UNIQUE INDEX `id_usuario_UNIQUE` (`id_usuario` ASC) VISIBLE,
   UNIQUE INDEX `nombre_UNIQUE` (`nombre` ASC) VISIBLE)
 ENGINE = InnoDB
+AUTO_INCREMENT = 2
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
@@ -106,12 +109,12 @@ CREATE TABLE IF NOT EXISTS `negocio_ventas`.`venta` (
   `id_usuario` INT NOT NULL,
   PRIMARY KEY (`id_venta`),
   UNIQUE INDEX `id_venta_UNIQUE` (`id_venta` ASC) VISIBLE,
-  UNIQUE INDEX `fecha_UNIQUE` (`fecha` ASC) VISIBLE,
   INDEX `id_usuario_idx` (`id_usuario` ASC) VISIBLE,
   CONSTRAINT `id_usuario`
     FOREIGN KEY (`id_usuario`)
     REFERENCES `negocio_ventas`.`usuario` (`id_usuario`))
 ENGINE = InnoDB
+AUTO_INCREMENT = 5
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
@@ -137,6 +140,7 @@ CREATE TABLE IF NOT EXISTS `negocio_ventas`.`producto_venta` (
     FOREIGN KEY (`id_venta`)
     REFERENCES `negocio_ventas`.`venta` (`id_venta`))
 ENGINE = InnoDB
+AUTO_INCREMENT = 5
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
