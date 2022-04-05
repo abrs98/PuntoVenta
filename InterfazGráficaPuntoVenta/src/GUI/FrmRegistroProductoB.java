@@ -11,6 +11,7 @@ import control.ControlProveedor;
 import entidades.Categoria;
 import entidades.Producto;
 import entidades.Proveedor;
+import java.awt.Frame;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -65,6 +66,7 @@ public class FrmRegistroProductoB extends javax.swing.JInternalFrame {
     }
 
     public void setCodigo(String codigo) {
+        txtClave.setText(codigo);
         this.codigo = codigo;
     }
 
@@ -569,9 +571,11 @@ public class FrmRegistroProductoB extends javax.swing.JInternalFrame {
 
     private void btnGenerarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerarActionPerformed
         // TODO add your handling code here:
-        FrmGeneradorCodigos codeGen = new FrmGeneradorCodigos();
+        //FrmGeneradorCodigos codeGen = new FrmGeneradorCodigos();
+        DlgGeneraradorCodigos codeGen = new DlgGeneraradorCodigos(true);
         codeGen.setLocationRelativeTo(this);
         codeGen.setVisible(true);
+        this.setCodigo(codeGen.codigo);
     }//GEN-LAST:event_btnGenerarActionPerformed
 
 

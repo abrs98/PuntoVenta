@@ -5,16 +5,14 @@
  */
 package GUI;
 
+import control.ControlProducto;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import java.awt.image.RenderedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -27,22 +25,25 @@ import net.sourceforge.barbecue.BarcodeImageHandler;
  *
  * @author Abrahan Barrios
  */
-public class FrmGeneradorCodigos extends javax.swing.JFrame {
+public class DlgGeneraradorCodigos extends javax.swing.JDialog {
 
-    private String codigo;
+    public String codigo;
     private BufferedImage imagenCodigo = null;
+    ControlProducto CProducto = new ControlProducto();
 
     /**
-     * Creates new form FrmReistrarProducto
+     * Creates new form DlgGeneraradorCodigos
      */
-    public FrmGeneradorCodigos() {
+    public DlgGeneraradorCodigos(boolean modal) {
+        super((java.awt.Frame) null, true);
+        setModalityType(java.awt.Dialog.ModalityType.APPLICATION_MODAL);
         initComponents();
     }
-
 
     public BufferedImage generateEAN13BarcodeImage(String barcodeText) throws Exception {
 
         Barcode barcode = BarcodeFactory.createEAN13(barcodeText);
+        //JOptionPane.showMessageDialog(null, "Codigo creado : "+barcode.getComponentCount());
         barcode.setBarHeight(42);
         barcode.setBarWidth(1);
 
@@ -106,16 +107,11 @@ public class FrmGeneradorCodigos extends javax.swing.JFrame {
         lblImageCode = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Registrar Producto");
-        setBackground(new java.awt.Color(51, 153, 255));
-        setForeground(new java.awt.Color(0, 102, 204));
-        setResizable(false);
 
         jPanel1.setBackground(new java.awt.Color(0, 51, 0));
         jPanel1.setForeground(new java.awt.Color(255, 102, 0));
         jPanel1.setMaximumSize(new java.awt.Dimension(506, 289));
         jPanel1.setMinimumSize(new java.awt.Dimension(506, 289));
-        jPanel1.setPreferredSize(new java.awt.Dimension(506, 289));
 
         jLabel2.setFont(new java.awt.Font("Ebrima", 1, 18)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
@@ -211,7 +207,7 @@ public class FrmGeneradorCodigos extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 530, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -221,26 +217,6 @@ public class FrmGeneradorCodigos extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void btnGenerarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerarActionPerformed
-        // TODO add your handling code here:
-
-        try {
-            codigo = generateRandomEANCode();
-
-            imagenCodigo = generateEAN13BarcodeImage(codigo);
-            ImageIcon icod = new ImageIcon(imagenCodigo.getScaledInstance(280, 100, BufferedImage.TYPE_INT_RGB));
-            lblImageCode.setIcon(icod);
-            lblImageCode.setText("");
-        } catch (Exception ex) {
-            Logger.getLogger(FrmGeneradorCodigos.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_btnGenerarActionPerformed
-
-    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-        // TODO add your handling code here:
-        this.dispose();
-    }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         // TODO add your handling code here:
@@ -264,8 +240,33 @@ public class FrmGeneradorCodigos extends javax.swing.JFrame {
         } else {
             System.out.println("No file choosen!");
         }
-        
+
     }//GEN-LAST:event_btnGuardarActionPerformed
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+    }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void btnGenerarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerarActionPerformed
+        // TODO add your handling code here:
+
+        try {
+            codigo = generateRandomEANCode();
+            
+            //JOptionPane.showMessageDialog(null, "Consultando codigo : "+codigo);
+            while (CProducto.consultarPorCodigo(codigo) != null) {
+                codigo = generateRandomEANCode();
+            }
+
+            imagenCodigo = generateEAN13BarcodeImage(codigo);
+            ImageIcon icod = new ImageIcon(imagenCodigo.getScaledInstance(280, 100, BufferedImage.TYPE_INT_RGB));
+            lblImageCode.setIcon(icod);
+            lblImageCode.setText("");
+        } catch (Exception ex) {
+            Logger.getLogger(DlgGeneraradorCodigos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnGenerarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -281,38 +282,30 @@ public class FrmGeneradorCodigos extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
-
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FrmGeneradorCodigos.class
-                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
-
+            java.util.logging.Logger.getLogger(DlgGeneraradorCodigos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FrmGeneradorCodigos.class
-                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
-
+            java.util.logging.Logger.getLogger(DlgGeneraradorCodigos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FrmGeneradorCodigos.class
-                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
-
+            java.util.logging.Logger.getLogger(DlgGeneraradorCodigos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FrmGeneradorCodigos.class
-                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(DlgGeneraradorCodigos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
 
-        /* Create and display the form */
+        /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FrmGeneradorCodigos().setVisible(true);
+                DlgGeneraradorCodigos dialog = new DlgGeneraradorCodigos(true);
+                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                    @Override
+                    public void windowClosing(java.awt.event.WindowEvent e) {
+                        System.exit(0);
+                    }
+                });
+                dialog.setVisible(true);
             }
         });
     }

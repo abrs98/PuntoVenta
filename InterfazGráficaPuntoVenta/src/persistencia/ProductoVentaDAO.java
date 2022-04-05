@@ -90,7 +90,7 @@ public class ProductoVentaDAO extends BaseDAO<ProductoVenta>{
             CriteriaBuilder builder = entityManager.getCriteriaBuilder();
             CriteriaQuery criteria = builder.createQuery(ProductoVenta.class);
             Root root = criteria.from(ProductoVenta.class);
-            criteria = criteria.select(root).where(builder.like(root.get("nombre"), "%"+busqueda+"%"));
+            criteria = criteria.select(root).where(builder.like(root.join("id_producto").get("nombre"), "%"+busqueda+"%"));
             TypedQuery query = entityManager.createQuery(criteria);
             List<ProductoVenta> productosVenta = query.getResultList();
             entityManager.getTransaction().commit();
