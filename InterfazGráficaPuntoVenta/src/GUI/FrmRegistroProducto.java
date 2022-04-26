@@ -29,7 +29,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author Abrahan Barrios
  */
-public class FrmRegistroProductoB extends javax.swing.JInternalFrame {
+public class FrmRegistroProducto extends javax.swing.JInternalFrame {
 
     // Atributos Heredados de las ventanas principales
     String nombre;
@@ -43,7 +43,7 @@ public class FrmRegistroProductoB extends javax.swing.JInternalFrame {
     /**
      * Creates new form FrmVentas
      */
-    public FrmRegistroProductoB() {
+    public FrmRegistroProducto() {
         initComponents();
         try {
             fillComboCategoria();

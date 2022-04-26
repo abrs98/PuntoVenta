@@ -580,7 +580,7 @@ public class FrmRegistroVentas extends javax.swing.JInternalFrame {
 
 //                    Usuario user = CUsuario.consultarPorIdUsuario(idAdmin);
 //                    if (user != null&&user.getAdministrador()) {
-                    FrmRegistroProductoB p = new FrmRegistroProductoB();
+                    FrmRegistroProducto p = new FrmRegistroProducto();
                     this.escritorio.add(p).setVisible(true);
 //
 //                    } else {

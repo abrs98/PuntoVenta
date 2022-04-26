@@ -310,7 +310,7 @@ public class FrmAdministrador extends javax.swing.JFrame {
 
     private void opcMnuRegistrarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_opcMnuRegistrarProductoActionPerformed
         try {
-            FrmRegistroProductoB p = new FrmRegistroProductoB();
+            FrmRegistroProducto p = new FrmRegistroProducto();
             escritorio.add(p).setVisible(true);
             p.setLocation(escritorio.getWidth()/5, escritorio.getHeight()/7);
             
