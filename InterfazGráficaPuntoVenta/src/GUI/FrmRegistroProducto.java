@@ -92,6 +92,7 @@ public class FrmRegistroProducto extends javax.swing.JInternalFrame {
         for (int i = 0; i < cbxCategoria.getItemCount(); i++) {
             cbxCategoria.removeItemAt(i);
             cbxCategoria.removeAllItems();
+           
         }
 
         try {
@@ -100,6 +101,7 @@ public class FrmRegistroProducto extends javax.swing.JInternalFrame {
             for (int i = 0; i < categorias.size(); i++) {
                 String formato = categorias.get(i).getNombre();
                 cbxCategoria.addItem(formato);
+                
             }
 
         } catch (Exception e) {

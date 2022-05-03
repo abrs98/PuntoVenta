@@ -170,9 +170,6 @@
         </Component>
         <Component class="javax.swing.JLabel" name="lblStock">
           <Properties>
-            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="0" green="0" red="0" type="rgb"/>
-            </Property>
             <Property name="text" type="java.lang.String" value="Stock"/>
           </Properties>
         </Component>
@@ -186,25 +183,16 @@
         </Component>
         <Component class="javax.swing.JLabel" name="lblNombre">
           <Properties>
-            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="0" green="0" red="0" type="rgb"/>
-            </Property>
             <Property name="text" type="java.lang.String" value="Nombre"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lblPrecio">
           <Properties>
-            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="0" green="0" red="0" type="rgb"/>
-            </Property>
             <Property name="text" type="java.lang.String" value="Precio"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lblClave">
           <Properties>
-            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="0" green="0" red="0" type="rgb"/>
-            </Property>
             <Property name="text" type="java.lang.String" value="Codigo"/>
           </Properties>
         </Component>
@@ -296,17 +284,11 @@
         </Component>
         <Component class="javax.swing.JLabel" name="lblStock1">
           <Properties>
-            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="0" green="0" red="0" type="rgb"/>
-            </Property>
             <Property name="text" type="java.lang.String" value="Categoria"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lblStock2">
           <Properties>
-            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="0" green="0" red="0" type="rgb"/>
-            </Property>
             <Property name="text" type="java.lang.String" value="Proveedor"/>
           </Properties>
         </Component>
@@ -367,9 +349,6 @@
         </Container>
         <Component class="javax.swing.JLabel" name="lblStock3">
           <Properties>
-            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="0" green="0" red="0" type="rgb"/>
-            </Property>
             <Property name="text" type="java.lang.String" value="Medida"/>
           </Properties>
         </Component>

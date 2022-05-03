@@ -91,7 +91,7 @@ public class DlgGeneraradorCodigos extends javax.swing.JDialog {
     /**
      * Cálculo del código de control
      */
-    private int controlCodeCalculator(String firstTwelveDigits) {
+    public int controlCodeCalculator(String firstTwelveDigits) {
         char[] charDigits = firstTwelveDigits.toCharArray();
         int[] ean13
                 = {

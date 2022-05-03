@@ -3,12 +3,22 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/ESTEBAN/Desktop/itson/SEMESTRES/8vo%20SEMESTRE/PROYECTO%20SOFTWARE%20INTEGRADOR/ProyectoFinal/ComponentesPuntoVenta/InterfazGráficaPuntoVenta/src/GUI/DlgGeneraradorCodigos.java</file>
-            <file>file:/C:/Users/ESTEBAN/Desktop/itson/SEMESTRES/8vo%20SEMESTRE/PROYECTO%20SOFTWARE%20INTEGRADOR/ProyectoFinal/ComponentesPuntoVenta/InterfazGráficaPuntoVenta/src/GUI/FrmAdministrador.java</file>
-            <file>file:/C:/Users/ESTEBAN/Desktop/itson/SEMESTRES/8vo%20SEMESTRE/PROYECTO%20SOFTWARE%20INTEGRADOR/ProyectoFinal/ComponentesPuntoVenta/InterfazGráficaPuntoVenta/src/GUI/FrmRegistroProducto.java</file>
-            <file>file:/C:/Users/ESTEBAN/Desktop/itson/SEMESTRES/8vo%20SEMESTRE/PROYECTO%20SOFTWARE%20INTEGRADOR/ProyectoFinal/ComponentesPuntoVenta/InterfazGráficaPuntoVenta/src/GUI/FrmRegistroCategoria.java</file>
-            <file>file:/C:/Users/ESTEBAN/Desktop/itson/SEMESTRES/8vo%20SEMESTRE/PROYECTO%20SOFTWARE%20INTEGRADOR/ProyectoFinal/ComponentesPuntoVenta/InterfazGráficaPuntoVenta/src/GUI/FrmRegistroAdmin.java</file>
-            <file>file:/C:/Users/ESTEBAN/Desktop/itson/SEMESTRES/8vo%20SEMESTRE/PROYECTO%20SOFTWARE%20INTEGRADOR/ProyectoFinal/ComponentesPuntoVenta/InterfazGráficaPuntoVenta/src/GUI/FrmRegistroProveedor.java</file>
+            <file>file:/C:/Users/Felipe%20Torres/Desktop/PuntoVenta/InterfazGráficaPuntoVenta/src/GUI/FrmInicioSesion.java</file>
+            <file>file:/C:/Users/Felipe%20Torres/Desktop/PuntoVenta/InterfazGráficaPuntoVenta/src/GUI/FrmRegistroProducto.java</file>
+            <file>file:/C:/Users/Felipe%20Torres/Desktop/PuntoVenta/InterfazGráficaPuntoVenta/src/GUI/FrmRegistroVentas.java</file>
+            <file>file:/C:/Users/Felipe%20Torres/Desktop/PuntoVenta/InterfazGráficaPuntoVenta/src/control/ControlProducto.java</file>
+            <file>file:/C:/Users/Felipe%20Torres/Desktop/PuntoVenta/InterfazGráficaPuntoVenta/src/GUI/FrmRegistroCategoria.java</file>
+            <file>file:/C:/Users/Felipe%20Torres/Desktop/PuntoVenta/InterfazGráficaPuntoVenta/src/GUI/FrmCajero.java</file>
+            <file>file:/C:/Users/Felipe%20Torres/Desktop/PuntoVenta/InterfazGráficaPuntoVenta/src/GUI/FrmConsultarReporte.java</file>
+            <file>file:/C:/Users/Felipe%20Torres/Desktop/PuntoVenta/InterfazGráficaPuntoVenta/src/GUI/FrmRegistroAdmin.java</file>
+            <file>file:/C:/Users/Felipe%20Torres/Desktop/PuntoVenta/InterfazGráficaPuntoVenta/src/persistencia/CategoriaDAO.java</file>
+            <file>file:/C:/Users/Felipe%20Torres/Desktop/PuntoVenta/InterfazGráficaPuntoVenta/src/GUI/FrmRegistroProveedor.java</file>
+            <file>file:/C:/Users/Felipe%20Torres/Desktop/PuntoVenta/InterfazGráficaPuntoVenta/src/GUI/DlgGeneraradorCodigos.java</file>
+            <file>file:/C:/Users/Felipe%20Torres/Desktop/PuntoVenta/InterfazGráficaPuntoVenta/src/persistencia/ProductoDAO.java</file>
+            <file>file:/C:/Users/Felipe%20Torres/Desktop/PuntoVenta/InterfazGráficaPuntoVenta/src/GUI/FrmAyuda.java</file>
+            <file>file:/C:/Users/Felipe%20Torres/Desktop/PuntoVenta/InterfazGráficaPuntoVenta/src/control/ControlCategoria.java</file>
+            <file>file:/C:/Users/Felipe%20Torres/Desktop/PuntoVenta/InterfazGráficaPuntoVenta/src/Pruebas/Pruebas.java</file>
+            <file>file:/C:/Users/Felipe%20Torres/Desktop/PuntoVenta/InterfazGráficaPuntoVenta/src/entidades/Categoria.java</file>
         </group>
     </open-files>
 </project-private>

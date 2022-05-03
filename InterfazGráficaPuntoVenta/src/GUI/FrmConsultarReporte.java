@@ -157,26 +157,30 @@ public class FrmConsultarReporte extends javax.swing.JInternalFrame {
 //        
 //    }
     private void fillComboProductos() {
-
+        
         List<Producto> productos = CProducto.consultarProductos(null);
 
         for (int i = 0; i < cbxProducto.getItemCount(); i++) {
             cbxProducto.removeItemAt(i);
             cbxProducto.removeAllItems();
+            System.out.println("si");
 
         }
-
+             System.out.println("no");
         try {
             cbxProducto.addItem("Todos");
 
             for (int i = 0; i < productos.size(); i++) {
                 String formato = productos.get(i).getNombre();
                 cbxProducto.addItem(formato);
+                System.out.println("si");
             }
 
         } catch (PersistenceException e) {
             JOptionPane.showMessageDialog(null, e.getMessage());
         }
+        
+        System.out.println("no");
 
     }
 
