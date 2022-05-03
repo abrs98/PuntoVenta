@@ -5,6 +5,14 @@
  */
 package GUI;
 
+import control.ControlProducto;
+import control.ControlProductoVenta;
+import control.ControlUsuario;
+import control.ControlVenta;
+import entidades.Producto;
+import entidades.ProductoVenta;
+import entidades.Usuario;
+import entidades.Venta;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -15,6 +23,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.persistence.PersistenceException;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -26,8 +35,18 @@ public class FrmRegistroVentas extends javax.swing.JInternalFrame {
 
     // Atributos Heredados de las ventanas principales
     String tipoUsuario;
-    int idAdmin;
+    int idAdmin = 1;
     int idCajero;
+
+    //Controladores de prouctos y ventas
+    ControlProducto CProducto = new ControlProducto();
+    ControlProductoVenta CProductoVenta = new ControlProductoVenta();
+    ControlVenta CVenta = new ControlVenta();
+    ControlUsuario CUsuario = new ControlUsuario();
+
+    List<ProductoVenta> productosVenta = new ArrayList<>();
+
+    Venta venta = new Venta();
 
     float total = 0;
     float subtotal = 0;
@@ -91,12 +110,11 @@ public class FrmRegistroVentas extends javax.swing.JInternalFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         TblListaVenta = new javax.swing.JTable();
         label3 = new java.awt.Label();
-        jPanel1 = new javax.swing.JPanel();
-        lblVenta = new java.awt.Label();
         jPanel2 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
+        lblProducto = new javax.swing.JLabel();
+        lblPrecio = new javax.swing.JLabel();
         btnCancelar1 = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
 
         setClosable(true);
         setTitle("Venta");
@@ -179,40 +197,16 @@ public class FrmRegistroVentas extends javax.swing.JInternalFrame {
         label3.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         label3.setText("Cantidad");
 
-        jPanel1.setBackground(new java.awt.Color(0, 40, 85));
-
-        lblVenta.setAlignment(java.awt.Label.CENTER);
-        lblVenta.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
-        lblVenta.setForeground(new java.awt.Color(255, 255, 255));
-        lblVenta.setText("VENTA");
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(35, 35, 35)
-                .addComponent(lblVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(36, Short.MAX_VALUE))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(lblVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
         jPanel2.setBackground(new java.awt.Color(51, 65, 92));
         jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
 
-        jLabel1.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("Coca Cola 600ml");
+        lblProducto.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        lblProducto.setForeground(new java.awt.Color(255, 255, 255));
+        lblProducto.setText("Producto");
 
-        jLabel2.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel2.setText("18.00");
+        lblPrecio.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        lblPrecio.setForeground(new java.awt.Color(255, 255, 255));
+        lblPrecio.setText("Precio");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -220,9 +214,9 @@ public class FrmRegistroVentas extends javax.swing.JInternalFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
+                .addComponent(lblProducto)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 74, Short.MAX_VALUE)
-                .addComponent(jLabel2)
+                .addComponent(lblPrecio)
                 .addGap(20, 20, 20))
         );
         jPanel2Layout.setVerticalGroup(
@@ -230,8 +224,8 @@ public class FrmRegistroVentas extends javax.swing.JInternalFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2))
+                    .addComponent(lblProducto)
+                    .addComponent(lblPrecio))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -246,6 +240,14 @@ public class FrmRegistroVentas extends javax.swing.JInternalFrame {
             }
         });
 
+        jLabel3.setBackground(new java.awt.Color(0, 40, 85));
+        jLabel3.setFont(new java.awt.Font("Dialog", 1, 36)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel3.setText("Venta");
+        jLabel3.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jLabel3.setOpaque(true);
+
         escritorio.setLayer(btnCancelar, javax.swing.JLayeredPane.DEFAULT_LAYER);
         escritorio.setLayer(txtClaveProducto, javax.swing.JLayeredPane.DEFAULT_LAYER);
         escritorio.setLayer(lblLista, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -258,28 +260,14 @@ public class FrmRegistroVentas extends javax.swing.JInternalFrame {
         escritorio.setLayer(lblCant, javax.swing.JLayeredPane.DEFAULT_LAYER);
         escritorio.setLayer(jScrollPane1, javax.swing.JLayeredPane.DEFAULT_LAYER);
         escritorio.setLayer(label3, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        escritorio.setLayer(jPanel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
         escritorio.setLayer(jPanel2, javax.swing.JLayeredPane.DEFAULT_LAYER);
         escritorio.setLayer(btnCancelar1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        escritorio.setLayer(jLabel3, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout escritorioLayout = new javax.swing.GroupLayout(escritorio);
         escritorio.setLayout(escritorioLayout);
         escritorioLayout.setHorizontalGroup(
             escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, escritorioLayout.createSequentialGroup()
-                .addContainerGap(59, Short.MAX_VALUE)
-                .addGroup(escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(escritorioLayout.createSequentialGroup()
-                        .addGroup(escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(escritorioLayout.createSequentialGroup()
-                                .addComponent(lblTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 495, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(27, 27, 27)
-                        .addComponent(btnCancelar1))
-                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(24, 24, 24))
             .addGroup(escritorioLayout.createSequentialGroup()
                 .addGroup(escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(escritorioLayout.createSequentialGroup()
@@ -299,10 +287,6 @@ public class FrmRegistroVentas extends javax.swing.JInternalFrame {
                         .addGap(194, 194, 194)
                         .addComponent(lblLista, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, escritorioLayout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(247, 247, 247))
             .addGroup(escritorioLayout.createSequentialGroup()
                 .addGap(97, 97, 97)
                 .addComponent(BtnTerminar, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -311,15 +295,34 @@ public class FrmRegistroVentas extends javax.swing.JInternalFrame {
                 .addGap(75, 75, 75)
                 .addComponent(BtnAgregarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, escritorioLayout.createSequentialGroup()
+                .addContainerGap(59, Short.MAX_VALUE)
+                .addGroup(escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, escritorioLayout.createSequentialGroup()
+                        .addGroup(escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(escritorioLayout.createSequentialGroup()
+                                .addGroup(escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(escritorioLayout.createSequentialGroup()
+                                        .addComponent(lblTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 495, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(27, 27, 27)
+                                .addComponent(btnCancelar1))
+                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(24, 24, 24))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, escritorioLayout.createSequentialGroup()
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(235, 235, 235))))
         );
         escritorioLayout.setVerticalGroup(
             escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(escritorioLayout.createSequentialGroup()
-                .addGap(18, 18, 18)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGroup(escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addContainerGap()
+                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(20, 20, 20)
+                .addGroup(escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(escritorioLayout.createSequentialGroup()
-                        .addGap(26, 26, 26)
                         .addComponent(label2, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -327,11 +330,9 @@ public class FrmRegistroVentas extends javax.swing.JInternalFrame {
                             .addGroup(escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(txtCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(lblCant))))
-                    .addGroup(escritorioLayout.createSequentialGroup()
-                        .addGap(30, 30, 30)
-                        .addGroup(escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtClaveProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtClaveProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(25, 25, 25)
                 .addComponent(lblLista, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -350,7 +351,7 @@ public class FrmRegistroVentas extends javax.swing.JInternalFrame {
                     .addComponent(BtnTerminar, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(BtnAgregarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(72, Short.MAX_VALUE))
+                .addContainerGap(74, Short.MAX_VALUE))
         );
 
         label2.getAccessibleContext().setAccessibleName("Codigo de Producto");
@@ -373,18 +374,69 @@ public class FrmRegistroVentas extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
         if (JOptionPane.showConfirmDialog(this, "¿Está seguro que desea terminar la venta?", "Confirmación", 2) == 0) {
 
-            
+            if (TblListaVenta.getRowCount() > 0) {
+                try {
 
+                    //Verificar si algun producto tiene promocion
+
+                    //Agregar la venta a la base de datos\
+                    venta.setTotal(total);
+
+                    GregorianCalendar fecha = new GregorianCalendar();
+
+                    venta.setFecha(fecha.getTime());
+
+                    Usuario user = CUsuario.consultarPorIdUsuario(1);
+                    System.out.println("Usuario > "+user.getIdUsuario());
+                    venta.setIdUsuario(user);
+
+                    //                    venta.setProductoVentaList(productosVenta);
+                    CVenta.guardarVenta(venta);
+
+                    System.out.println("ID Venta: " + venta.getIdVenta());
+
+                    //Agregar productos de venta a la base de datos
+                    for (int i = 0; i < productosVenta.size(); i++) {
+
+                        ProductoVenta v = productosVenta.get(i);
+                        Producto p = CProducto.consultarPorCodigo(productosVenta.get(i).getIdProducto().getCodigo());
+                        float cantidad = v.getCantidad();
+                        p.setStock(p.getStock()- cantidad);
+
+                        v.setVenta(venta);
+                        
+                        System.out.println(v.getVenta());
+
+                        try {
+                            CProducto.actualizarProducto(p);
+
+                        } catch (PersistenceException e) {
+                            JOptionPane.showMessageDialog(null, e.getMessage());
+                        }
+                        try {
+                            CProductoVenta.guardarProductoVenta(v);
+
+                        } catch (PersistenceException e) {
+                            JOptionPane.showMessageDialog(null, e.getMessage());
+                        }
+
+                    }
+                    
                     JOptionPane.showMessageDialog(this, "Venta finalizada con éxito. Folio: "
-                            + 123 + " Total: " + 203.4, "Venta finalizada", JOptionPane.INFORMATION_MESSAGE);
+                            + venta.getIdVenta() + " Total: " + venta.getTotal(), "Venta finalizada", JOptionPane.INFORMATION_MESSAGE);
 
-                    
-                    
+
                     txtClaveProducto.setText("");
                     txtCantidad.setText("");
                     txtClaveProducto.grabFocus();
 
                     this.dispose();
+
+                } catch (PersistenceException e) {
+                    JOptionPane.showMessageDialog(null, "Ocurrio un error al hacer la venta " + e.getMessage(), "Lo sentimos", JOptionPane.ERROR_MESSAGE);
+                } catch (Exception ex) {
+                    Logger.getLogger(FrmRegistroVentas.class.getName()).log(Level.SEVERE, null, ex);
+                }
 
             } else {
                 JOptionPane.showMessageDialog(null, "Lista de venta vacia, agregue Productos");
@@ -393,12 +445,153 @@ public class FrmRegistroVentas extends javax.swing.JInternalFrame {
                 txtClaveProducto.grabFocus();
 
             }
-
-        
+        }
     }//GEN-LAST:event_BtnTerminarActionPerformed
 
     private void BtnAgregarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnAgregarProductoActionPerformed
-       
+        if (txtClaveProducto.getText().equals("") || txtCantidad.getText().equals("")) {
+            JOptionPane.showMessageDialog(this, "Favor de llenar todos los campos");
+        } else {
+
+            DefaultTableModel modelo = (DefaultTableModel) TblListaVenta.getModel();
+            Producto producto;
+
+            //Sección 2
+            Object[] fila = new Object[3];
+            String claveProducto = "";
+            float cantidad = 0;
+
+            try {
+                //Inicializar parametros de agregar producto
+                claveProducto = txtClaveProducto.getText();
+                cantidad = Float.parseFloat(txtCantidad.getText());
+
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Llenado fallido de los campos, intente de nuevo.", "Error", JOptionPane.ERROR_MESSAGE);
+                txtClaveProducto.setText("");
+                txtCantidad.setText("");
+                txtClaveProducto.grabFocus();
+                return;
+
+            }
+            //Verificar que el producto exista
+            if (CProducto.consultarPorCodigo(claveProducto) != null) {
+                if (CProducto.consultarPorCodigo(claveProducto).getStock() < cantidad) {
+                    JOptionPane.showMessageDialog(this, "No se cuenta con suficientes articulos de este producto", "Error", JOptionPane.ERROR_MESSAGE);
+                } else {
+
+                    //Cr
+                    producto = CProducto.consultarPorCodigo(claveProducto);
+
+                    String nombreProducto = "";
+                    float precioUnitario = 0.0f;
+
+                    try {
+                        nombreProducto = producto.getNombre();
+                    } catch (Exception e) {
+                        JOptionPane.showMessageDialog(this, "No se encontro el nombre del producto con la clave solicitada");
+                        return;
+                    }
+
+                    try {
+
+                        precioUnitario = producto.getPrecio();
+                    } catch (Exception e) {
+                        JOptionPane.showMessageDialog(this, "No se encontro el precio unitario del producto con la clave solicitada");
+                        return;
+
+                    }
+
+                    //Sección 3
+                    fila[0] = txtCantidad.getText();
+                    fila[1] = nombreProducto;
+                    fila[2] = precioUnitario;
+
+                    //Sección 4
+                    //Sección 5
+                    // Almacenamiento de los detalles del producto vendido
+                    ProductoVenta p = new ProductoVenta();
+                    p.setCantidad((int) cantidad);
+                    p.setIdProducto(producto);
+                    p.setImporte(cantidad*p.getIdProducto().getPrecio());
+                    p.setPrecio(p.getIdProducto().getPrecio());
+
+                    //Validacion de que no se repitan los productos
+                    int productoIgual = 0;
+
+                    for (int i = 0; i < productosVenta.size(); i++) {
+                        ProductoVenta prodLista = productosVenta.get(i);
+
+                        if (prodLista.getIdProducto() == p.getIdProducto()) {
+
+                            productoIgual = 1;
+                            float sumaCantidades = prodLista.getCantidad() + p.getCantidad();
+                            float sumaImportes = prodLista.getImporte() + p.getImporte();
+
+                            if (sumaCantidades <= p.getIdProducto().getStock()) {
+
+                                p.setCantidad(sumaCantidades);
+                                p.setImporte(sumaImportes);
+                                productosVenta.remove(i);
+                                JOptionPane.showMessageDialog(null, "Las cantidaes de los productos repetidos han sido sumadas");
+                                break;
+                            } else {
+                                JOptionPane.showMessageDialog(null, "No puede agregar este producto de nuevo, no hay suficiente stock");
+                                return;
+                            }
+                        }
+
+                    }
+
+                    productosVenta.add(p);
+
+                    subtotal += precioUnitario * cantidad;
+                    total = subtotal;
+
+                    txtTotal.setText(Float.toString(total));
+
+                    txtClaveProducto.setText("");
+                    txtCantidad.setText("");
+                    txtClaveProducto.grabFocus();
+
+                    if (productoIgual == 0) {
+                        modelo.addRow(fila);
+                        TblListaVenta.setModel(modelo);
+                    } else {
+
+                        for (int i = 0; i < TblListaVenta.getRowCount(); i++) {
+                            if (TblListaVenta.getValueAt(i, 1).toString().equalsIgnoreCase(p.getIdProducto().getNombre())) {
+
+                                TblListaVenta.setValueAt(p.getCantidad(), i, 0);
+                                break;
+                            }
+                        }
+
+                        JOptionPane.showMessageDialog(null, "Productos repetidos, se actualizó la cantidad en la lista",
+                                "Informacion", JOptionPane.INFORMATION_MESSAGE);
+                    }
+
+                }
+            } else {
+
+                //                JOptionPane.showMessageDialog(this, "Producto no encontrado, ingrese una clave valida",
+                //                        "Error", JOptionPane.ERROR_MESSAGE);
+                if (JOptionPane.showConfirmDialog(null, "Producto no encontrado, desea registrarlo? (ADMINISTRADOR)") == 0) {
+
+//                    Usuario user = CUsuario.consultarPorIdUsuario(idAdmin);
+//                    if (user != null&&user.getAdministrador()) {
+                    FrmRegistroProducto p = new FrmRegistroProducto();
+                    this.escritorio.add(p).setVisible(true);
+//
+//                    } else {
+//                        JOptionPane.showMessageDialog(this, "No puede registrar un producto",
+//                                "Error", JOptionPane.ERROR_MESSAGE);
+//                    }
+
+                }
+
+            }
+        }
     }//GEN-LAST:event_BtnAgregarProductoActionPerformed
 
     private void txtClaveProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtClaveProductoActionPerformed
@@ -422,7 +615,6 @@ public class FrmRegistroVentas extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_btnCancelar1ActionPerformed
 
-    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BtnAgregarProducto;
@@ -431,17 +623,16 @@ public class FrmRegistroVentas extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnCancelar1;
     private javax.swing.JDesktopPane escritorio;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private java.awt.Label label2;
     private java.awt.Label label3;
     private javax.swing.JLabel lblCant;
     private java.awt.Label lblLista;
+    private javax.swing.JLabel lblPrecio;
+    private javax.swing.JLabel lblProducto;
     private javax.swing.JLabel lblTotal;
-    private java.awt.Label lblVenta;
     private javax.swing.JTextField txtCantidad;
     private javax.swing.JTextField txtClaveProducto;
     private javax.swing.JTextField txtTotal;

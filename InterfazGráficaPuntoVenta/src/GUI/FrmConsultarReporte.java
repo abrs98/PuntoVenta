@@ -5,10 +5,19 @@
  */
 package GUI;
 
+import control.ControlProducto;
+import control.ControlProductoVenta;
+import control.ControlVenta;
+import entidades.Producto;
+import entidades.ProductoVenta;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import javax.persistence.PersistenceException;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -16,11 +25,159 @@ import javax.swing.JOptionPane;
  */
 public class FrmConsultarReporte extends javax.swing.JInternalFrame {
 
+    ControlProducto CProducto = new ControlProducto();
+    ControlVenta CVenta = new ControlVenta();
+    ControlProductoVenta CProductoventa = new ControlProductoVenta();
+
     /**
      * Creates new form ConsultarReporte
      */
     public FrmConsultarReporte() {
         initComponents();
+        CrearModelo();
+    }
+
+    DefaultTableModel modelo2;
+
+    private void CrearModelo() {
+        try {
+            modelo2 = (new DefaultTableModel(
+                    null, new String[]{
+                        "Fecha", "ID Venta",
+                        "Producto", "Cantidad", "Precio", "Importe"}) {
+                Class[] types = new Class[]{
+                    java.lang.String.class, //aqui es el tipo de columna, dejemoslo en STRING
+                    java.lang.String.class,
+                    java.lang.String.class,
+                    java.lang.String.class,
+                    java.lang.String.class,
+                    java.lang.String.class,};
+                boolean[] canEdit = new boolean[]{ //aquí decimos si podrán ser editables o no.
+                    false, false, false, false, false, false
+                };
+
+                @Override
+                public Class getColumnClass(int columnIndex) {
+                    return types[columnIndex];
+                }
+
+                @Override
+                public boolean isCellEditable(int rowIndex, int colIndex) {
+                    return canEdit[colIndex];
+                }
+            });
+            TblListaVenta.setModel(modelo2);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e.toString() + "error");
+        }
+    }
+
+    private void Cargar_Informacion(String nombre, Date di, Date df) { //sirve para cargar la información de la base de datos y mostrarla en el JFrame (tabla).
+        try {
+            System.out.println("si se está ejecutando"); //mensaje para saber si se está ejecutando el método.
+
+            Object O[] = null;
+
+            List<ProductoVenta> list = CProductoventa.consultarProductosVentas(null);
+
+            List<ProductoVenta> listPV = new ArrayList<>();
+
+            //Busqueda de productos venta de acuerdo a parametros
+            ProductoVenta pv;
+            Date dv;
+            
+            if (nombre == null) {
+                for (int i = 0; i < list.size(); i++) {
+                    pv = list.get(i);
+                    dv = pv.getVenta().getFecha();
+                    if (dv.after(di) && dv.before(df)) {
+                        listPV.add(pv);
+                    }
+                }
+            } else {
+
+                for (int i = 0; i < list.size(); i++) {
+                    pv = list.get(i);
+                    dv = pv.getVenta().getFecha();
+                    if (dv.after(di) && dv.before(df) && pv.getIdProducto().getNombre().equals(nombre)) {
+                        listPV.add(pv);
+                    }
+                }
+            }
+
+            if(listPV.isEmpty()){
+                JOptionPane.showMessageDialog(null, "No se encontraron coincidencias");
+            }
+            float importe = 0.0f;
+            //para buscar personas usaremos un ciclo for.
+            for (int i = 0; i < listPV.size(); i++) {
+                System.out.println("" + listPV.get(i).getIdProducto().getNombre()); //hasta este paso, solo sale la info en consola, aun no se muestra en la tabla.
+                modelo2.addRow(O); //aquí pediremos que se agregue la informacion del arreglo,
+                modelo2.setValueAt(listPV.get(i).getVenta().getFecha(), i, 0); //el numero al final 0 indica el lugar donde se mostrará en la tabla la información..
+                modelo2.setValueAt(listPV.get(i).getVenta().getIdVenta(), i, 1);
+                modelo2.setValueAt(listPV.get(i).getIdProducto().getNombre(), i, 2);
+                modelo2.setValueAt(listPV.get(i).getCantidad(), i, 3);
+                modelo2.setValueAt(listPV.get(i).getPrecio(), i, 4);
+                modelo2.setValueAt(listPV.get(i).getImporte(), i, 5);
+
+                importe += listPV.get(i).getImporte();
+            }
+
+            String imp = String.format("%.2f", importe);
+            jTextField1.setText(imp);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        }
+    }
+
+//     private void seleccionar() {
+//         
+//        String id = tabla.getValueAt(tabla.getSelectedRow(), 0).toString();
+//        String nombre = tabla.getValueAt(tabla.getSelectedRow(), 1).toString();
+//        String precio = tabla.getValueAt(tabla.getSelectedRow(), 2).toString();
+//        String cantidad = tabla.getValueAt(tabla.getSelectedRow(), 3).toString();
+//        String categoria = tabla.getValueAt(tabla.getSelectedRow(), 4).toString();
+//        String proveedor = tabla.getValueAt(tabla.getSelectedRow(), 5).toString();
+//        
+//
+//        lblIdTexto.setText(id);
+//        txtNombre.setText(nombre);
+//        txtPrecio.setText(precio);
+//        txtCantidad.setText(cantidad);
+//        
+//         for (int i = 0; i < cbxCategoria.getItemCount(); i++) {
+//             if(cbxCategoria.getItemAt(i).equalsIgnoreCase(categoria))
+//                 cbxCategoria.setSelectedIndex(i);
+//         }
+//         
+//         for (int i = 0; i < cbxProveedor.getItemCount(); i++) {
+//             if(cbxProveedor.getItemAt(i).equalsIgnoreCase(proveedor))
+//                 cbxProveedor.setSelectedIndex(i);
+//         }
+//        
+//    }
+    private void fillComboProductos() {
+
+        List<Producto> productos = CProducto.consultarProductos(null);
+
+        for (int i = 0; i < cbxProducto.getItemCount(); i++) {
+            cbxProducto.removeItemAt(i);
+            cbxProducto.removeAllItems();
+
+        }
+
+        try {
+            cbxProducto.addItem("Todos");
+
+            for (int i = 0; i < productos.size(); i++) {
+                String formato = productos.get(i).getNombre();
+                cbxProducto.addItem(formato);
+            }
+
+        } catch (PersistenceException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        }
+
     }
 
     /**
@@ -33,9 +190,6 @@ public class FrmConsultarReporte extends javax.swing.JInternalFrame {
     private void initComponents() {
 
         escritorio = new javax.swing.JDesktopPane();
-        jPanel1 = new javax.swing.JPanel();
-        lblReporteVenta = new java.awt.Label();
-        lblReporte = new java.awt.Label();
         jScrollPane1 = new javax.swing.JScrollPane();
         TblListaVenta = new javax.swing.JTable();
         jPanel3 = new javax.swing.JPanel();
@@ -49,6 +203,8 @@ public class FrmConsultarReporte extends javax.swing.JInternalFrame {
         jFechaFinal = new com.toedter.calendar.JDateChooser();
         jLabel1 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
 
         setClosable(true);
         setTitle("Consultar Reporte de Venta");
@@ -68,31 +224,6 @@ public class FrmConsultarReporte extends javax.swing.JInternalFrame {
         });
 
         escritorio.setBackground(new java.awt.Color(151, 157, 172));
-
-        jPanel1.setBackground(new java.awt.Color(0, 40, 85));
-
-        lblReporteVenta.setAlignment(java.awt.Label.CENTER);
-        lblReporteVenta.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
-        lblReporteVenta.setForeground(new java.awt.Color(255, 255, 255));
-        lblReporteVenta.setText("Reporte de ventas");
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(32, Short.MAX_VALUE)
-                .addComponent(lblReporteVenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(30, 30, 30))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(lblReporteVenta, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 66, Short.MAX_VALUE)
-        );
-
-        lblReporte.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
-        lblReporte.setForeground(new java.awt.Color(0, 18, 51));
-        lblReporte.setText("Reporte");
 
         TblListaVenta.setBackground(new java.awt.Color(151, 157, 172));
         TblListaVenta.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
@@ -118,9 +249,13 @@ public class FrmConsultarReporte extends javax.swing.JInternalFrame {
         jLabel17.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
 
         cbxProducto.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "-Seleccionar-" }));
-        cbxProducto.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbxProductoActionPerformed(evt);
+        cbxProducto.addAncestorListener(new javax.swing.event.AncestorListener() {
+            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
+            }
+            public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
+                cbxProductoAncestorAdded(evt);
+            }
+            public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
             }
         });
 
@@ -208,26 +343,34 @@ public class FrmConsultarReporte extends javax.swing.JInternalFrame {
 
         jLabel1.setText("Total Venta:");
 
-        escritorio.setLayer(jPanel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        escritorio.setLayer(lblReporte, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jTextField1.setEditable(false);
+
+        jLabel2.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(0, 18, 51));
+        jLabel2.setText("Reporte");
+
+        jLabel3.setBackground(new java.awt.Color(0, 40, 85));
+        jLabel3.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel3.setText("Reporte de ventas");
+        jLabel3.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jLabel3.setOpaque(true);
+
         escritorio.setLayer(jScrollPane1, javax.swing.JLayeredPane.DEFAULT_LAYER);
         escritorio.setLayer(jPanel3, javax.swing.JLayeredPane.DEFAULT_LAYER);
         escritorio.setLayer(jLabel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
         escritorio.setLayer(jTextField1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        escritorio.setLayer(jLabel2, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        escritorio.setLayer(jLabel3, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout escritorioLayout = new javax.swing.GroupLayout(escritorio);
         escritorio.setLayout(escritorioLayout);
         escritorioLayout.setHorizontalGroup(
             escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(escritorioLayout.createSequentialGroup()
-                .addContainerGap(10, Short.MAX_VALUE)
+                .addContainerGap(20, Short.MAX_VALUE)
                 .addGroup(escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, escritorioLayout.createSequentialGroup()
-                        .addComponent(lblReporte, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(275, 275, 275))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, escritorioLayout.createSequentialGroup()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(195, 195, 195))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, escritorioLayout.createSequentialGroup()
                         .addGroup(escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(escritorioLayout.createSequentialGroup()
@@ -236,24 +379,30 @@ public class FrmConsultarReporte extends javax.swing.JInternalFrame {
                                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 667, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 667, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(21, 21, 21))))
+                        .addGap(21, 21, 21))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, escritorioLayout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addGap(304, 304, 304))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, escritorioLayout.createSequentialGroup()
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(228, 228, 228))))
         );
         escritorioLayout.setVerticalGroup(
             escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(escritorioLayout.createSequentialGroup()
-                .addGap(37, 37, 37)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(45, 45, 45)
+                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblReporte, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel2)
+                .addGap(30, 30, 30)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(25, 25, 25)
                 .addGroup(escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(59, Short.MAX_VALUE))
+                .addContainerGap(35, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -274,25 +423,54 @@ public class FrmConsultarReporte extends javax.swing.JInternalFrame {
 
     private void formAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_formAncestorAdded
         // TODO add your handling code here:
-         JOptionPane.showMessageDialog(null, "Seccion para consultar reporte de ventas");
+        JOptionPane.showMessageDialog(null, "Seccion para consultar reporte de ventas");
     }//GEN-LAST:event_formAncestorAdded
 
-    private void cbxProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxProductoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cbxProductoActionPerformed
-
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
-       
+        if (jFechaInicial.getDate() == null) {
+            JOptionPane.showMessageDialog(null, "Debe proporcionar una fecha inicial!");
+            return;
+        } else if (jFechaFinal.getDate() == null) {
+            JOptionPane.showMessageDialog(null, "Debe proporcionar una fecha final!");
+            return;
+        } else if (jFechaInicial.getDate().after(jFechaFinal.getDate())) {
+            JOptionPane.showMessageDialog(null, "Las fechas no fueron ingresadas correctamente!");
+            jFechaFinal.setDate(null);
+            jFechaInicial.setDate(null);
+            return;
+        }
+
+        String nombreP;
+        if (cbxProducto.getSelectedIndex() != 0) {
+            nombreP = cbxProducto.getSelectedItem().toString();
+            //JOptionPane.showMessageDialog(null, "El nombre del producto es "+nombreP);
+        } else {
+            nombreP = null;
+        }
+        CrearModelo();
+        Date di = jFechaInicial.getDate();
+        Date df = jFechaFinal.getDate();
+        Cargar_Informacion(nombreP, di, df);
 
     }//GEN-LAST:event_btnBuscarActionPerformed
     private void limpiarCajas() {
-         jFechaInicial.setDate(null);
-         jFechaFinal.setDate(null);
+        jFechaInicial.setDate(null);
+        jFechaFinal.setDate(null);
         cbxProducto.setSelectedIndex(0);
     }
     private void txtActualizarProducto1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtActualizarProducto1ActionPerformed
         limpiarCajas();
     }//GEN-LAST:event_txtActualizarProducto1ActionPerformed
+
+    private void cbxProductoAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_cbxProductoAncestorAdded
+        // TODO add your handling code here:
+        try {
+            // TODO add your handling code here:
+            fillComboProductos();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage());
+        }
+    }//GEN-LAST:event_cbxProductoAncestorAdded
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -306,12 +484,11 @@ public class FrmConsultarReporte extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
-    private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField jTextField1;
-    private java.awt.Label lblReporte;
-    private java.awt.Label lblReporteVenta;
     private javax.swing.JButton txtActualizarProducto1;
     // End of variables declaration//GEN-END:variables
 }
