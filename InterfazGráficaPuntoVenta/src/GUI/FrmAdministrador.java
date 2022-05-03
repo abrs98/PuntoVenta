@@ -69,14 +69,16 @@ public class FrmAdministrador extends javax.swing.JFrame {
         opcMnuNuevoA = new javax.swing.JMenuItem();
         opcMnuNuevoC = new javax.swing.JMenuItem();
         mnuProducto = new javax.swing.JMenu();
-        jMenu1 = new javax.swing.JMenu();
+        MnuProducto = new javax.swing.JMenu();
         opcMnuRegistrarProducto = new javax.swing.JMenuItem();
         opcMnuActualizarProducto = new javax.swing.JMenuItem();
         opcMnuEliminarProducto = new javax.swing.JMenuItem();
         opcMnuBuscarProducto = new javax.swing.JMenuItem();
-        opcMnuEdicionCategoria = new javax.swing.JMenuItem();
-        opcMnuEdicionProveedor = new javax.swing.JMenuItem();
-        opcMnuEdicionCategoria1 = new javax.swing.JMenuItem();
+        jMenu1 = new javax.swing.JMenu();
+        opcMnuRegistrarCategoria = new javax.swing.JMenuItem();
+        jMenu5 = new javax.swing.JMenu();
+        opcMnuRegistrarProveedor = new javax.swing.JMenuItem();
+        opcMnuConsultarReporte = new javax.swing.JMenuItem();
         mnuAyuda = new javax.swing.JMenu();
         opcMnuAcerca = new javax.swing.JMenuItem();
 
@@ -175,7 +177,7 @@ public class FrmAdministrador extends javax.swing.JFrame {
 
         mnuProducto.setText("Inventario");
 
-        jMenu1.setText("Producto");
+        MnuProducto.setText("Producto");
 
         opcMnuRegistrarProducto.setText("Registrar");
         opcMnuRegistrarProducto.addActionListener(new java.awt.event.ActionListener() {
@@ -183,10 +185,10 @@ public class FrmAdministrador extends javax.swing.JFrame {
                 opcMnuRegistrarProductoActionPerformed(evt);
             }
         });
-        jMenu1.add(opcMnuRegistrarProducto);
+        MnuProducto.add(opcMnuRegistrarProducto);
 
         opcMnuActualizarProducto.setText("Actualizar");
-        jMenu1.add(opcMnuActualizarProducto);
+        MnuProducto.add(opcMnuActualizarProducto);
 
         opcMnuEliminarProducto.setText("Eliminar");
         opcMnuEliminarProducto.addActionListener(new java.awt.event.ActionListener() {
@@ -194,36 +196,44 @@ public class FrmAdministrador extends javax.swing.JFrame {
                 opcMnuEliminarProductoActionPerformed(evt);
             }
         });
-        jMenu1.add(opcMnuEliminarProducto);
+        MnuProducto.add(opcMnuEliminarProducto);
 
         opcMnuBuscarProducto.setText("Buscar");
-        jMenu1.add(opcMnuBuscarProducto);
+        MnuProducto.add(opcMnuBuscarProducto);
+
+        mnuProducto.add(MnuProducto);
+
+        jMenu1.setText("Categoria");
+
+        opcMnuRegistrarCategoria.setText("Registrar");
+        opcMnuRegistrarCategoria.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                opcMnuRegistrarCategoriaActionPerformed(evt);
+            }
+        });
+        jMenu1.add(opcMnuRegistrarCategoria);
 
         mnuProducto.add(jMenu1);
 
-        opcMnuEdicionCategoria.setText(" Categoria");
-        opcMnuEdicionCategoria.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                opcMnuEdicionCategoriaActionPerformed(evt);
-            }
-        });
-        mnuProducto.add(opcMnuEdicionCategoria);
+        jMenu5.setText("Proveedor");
 
-        opcMnuEdicionProveedor.setText(" Proveedor");
-        opcMnuEdicionProveedor.addActionListener(new java.awt.event.ActionListener() {
+        opcMnuRegistrarProveedor.setText("Registrar");
+        opcMnuRegistrarProveedor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                opcMnuEdicionProveedorActionPerformed(evt);
+                opcMnuRegistrarProveedorActionPerformed(evt);
             }
         });
-        mnuProducto.add(opcMnuEdicionProveedor);
+        jMenu5.add(opcMnuRegistrarProveedor);
 
-        opcMnuEdicionCategoria1.setText("Consultar reporte de venta");
-        opcMnuEdicionCategoria1.addActionListener(new java.awt.event.ActionListener() {
+        mnuProducto.add(jMenu5);
+
+        opcMnuConsultarReporte.setText("Consultar reporte de venta");
+        opcMnuConsultarReporte.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                opcMnuEdicionCategoria1ActionPerformed(evt);
+                opcMnuConsultarReporteActionPerformed(evt);
             }
         });
-        mnuProducto.add(opcMnuEdicionCategoria1);
+        mnuProducto.add(opcMnuConsultarReporte);
 
         menuBar.add(mnuProducto);
 
@@ -292,17 +302,31 @@ public class FrmAdministrador extends javax.swing.JFrame {
         escritorio.add(ayuda).setVisible(true);
     }//GEN-LAST:event_opcMnuAcercaActionPerformed
 
-    private void opcMnuEdicionProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_opcMnuEdicionProveedorActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_opcMnuEdicionProveedorActionPerformed
-
-    private void opcMnuEdicionCategoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_opcMnuEdicionCategoriaActionPerformed
-
-    }//GEN-LAST:event_opcMnuEdicionCategoriaActionPerformed
-
     private void opcMnuAccActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_opcMnuAccActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_opcMnuAccActionPerformed
+
+    private void opcMnuConsultarReporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_opcMnuConsultarReporteActionPerformed
+        try {
+            FrmConsultarReporte c = new FrmConsultarReporte();
+            escritorio.add(c).setVisible(true);
+            c.setLocation(escritorio.getWidth()/5, escritorio.getHeight()/7);
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        }
+    }//GEN-LAST:event_opcMnuConsultarReporteActionPerformed
+
+    private void opcMnuRegistrarCategoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_opcMnuRegistrarCategoriaActionPerformed
+        try {
+            FrmRegistroCategoria c = new FrmRegistroCategoria();
+            escritorio.add(c).setVisible(true);
+            c.setLocation(escritorio.getWidth()/5, escritorio.getHeight()/7);
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        }
+    }//GEN-LAST:event_opcMnuRegistrarCategoriaActionPerformed
 
     private void opcMnuEliminarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_opcMnuEliminarProductoActionPerformed
         // TODO add your handling code here:
@@ -313,18 +337,24 @@ public class FrmAdministrador extends javax.swing.JFrame {
             FrmRegistroProducto p = new FrmRegistroProducto();
             escritorio.add(p).setVisible(true);
             p.setLocation(escritorio.getWidth()/5, escritorio.getHeight()/7);
-            
+
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e.getMessage());
         }
-        
+
     }//GEN-LAST:event_opcMnuRegistrarProductoActionPerformed
 
-    private void opcMnuEdicionCategoria1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_opcMnuEdicionCategoria1ActionPerformed
-        FrmConsultarReporte reporte = new FrmConsultarReporte();
-        
-        escritorio.add(reporte).setVisible(true);
-    }//GEN-LAST:event_opcMnuEdicionCategoria1ActionPerformed
+    private void opcMnuRegistrarProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_opcMnuRegistrarProveedorActionPerformed
+        // TODO add your handling code here:
+        try {
+            FrmRegistroProveedor p = new FrmRegistroProveedor();
+            escritorio.add(p).setVisible(true);
+            p.setLocation(escritorio.getWidth()/5, escritorio.getHeight()/7);
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        }
+    }//GEN-LAST:event_opcMnuRegistrarProveedorActionPerformed
 
     /**
      * @param args the command line arguments
@@ -362,11 +392,13 @@ public class FrmAdministrador extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenu MnuProducto;
     private javax.swing.JDesktopPane escritorio;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;
+    private javax.swing.JMenu jMenu5;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenu mnuAdm;
@@ -378,15 +410,15 @@ public class FrmAdministrador extends javax.swing.JFrame {
     private javax.swing.JMenuItem opcMnuAcerca;
     private javax.swing.JMenuItem opcMnuActualizarProducto;
     private javax.swing.JMenuItem opcMnuBuscarProducto;
+    private javax.swing.JMenuItem opcMnuConsultarReporte;
     private javax.swing.JMenuItem opcMnuConsultarV;
-    private javax.swing.JMenuItem opcMnuEdicionCategoria;
-    private javax.swing.JMenuItem opcMnuEdicionCategoria1;
-    javax.swing.JMenuItem opcMnuEdicionProveedor;
     private javax.swing.JMenuItem opcMnuEliminarProducto;
     private javax.swing.JMenuItem opcMnuNuevaV;
     private javax.swing.JMenuItem opcMnuNuevoA;
     private javax.swing.JMenuItem opcMnuNuevoC;
+    private javax.swing.JMenuItem opcMnuRegistrarCategoria;
     private javax.swing.JMenuItem opcMnuRegistrarProducto;
+    private javax.swing.JMenuItem opcMnuRegistrarProveedor;
     private javax.swing.JMenuItem opcMnuSalir;
     // End of variables declaration//GEN-END:variables
 
