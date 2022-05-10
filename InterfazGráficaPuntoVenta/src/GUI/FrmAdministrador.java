@@ -188,6 +188,11 @@ public class FrmAdministrador extends javax.swing.JFrame {
         MnuProducto.add(opcMnuRegistrarProducto);
 
         opcMnuActualizarProducto.setText("Actualizar");
+        opcMnuActualizarProducto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                opcMnuActualizarProductoActionPerformed(evt);
+            }
+        });
         MnuProducto.add(opcMnuActualizarProducto);
 
         opcMnuEliminarProducto.setText("Eliminar");
@@ -310,7 +315,6 @@ public class FrmAdministrador extends javax.swing.JFrame {
         try {
             FrmConsultarReporte c = new FrmConsultarReporte();
             escritorio.add(c).setVisible(true);
-            c.setLocation(escritorio.getWidth()/5, escritorio.getHeight()/7);
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e.getMessage());
@@ -355,6 +359,19 @@ public class FrmAdministrador extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, e.getMessage());
         }
     }//GEN-LAST:event_opcMnuRegistrarProveedorActionPerformed
+
+    private void opcMnuActualizarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_opcMnuActualizarProductoActionPerformed
+        // TODO add your handling code here:
+        try {
+            FrmActualizacionProducto p = new FrmActualizacionProducto();
+            escritorio.add(p).setVisible(true);
+            p.setLocation(escritorio.getWidth()/9, escritorio.getHeight()/40);
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        }
+        
+    }//GEN-LAST:event_opcMnuActualizarProductoActionPerformed
 
     /**
      * @param args the command line arguments

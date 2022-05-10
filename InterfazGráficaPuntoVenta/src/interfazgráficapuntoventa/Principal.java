@@ -8,6 +8,10 @@ package interfazgráficapuntoventa;
 import javax.swing.JOptionPane;
 import GUI.FrmInicioSesion;
 import GUI.FrmRegistroAdmin;
+import control.ControlUsuario;
+import entidades.Usuario;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -21,9 +25,24 @@ public class Principal {
     public static void main(String[] args) {
         // TODO code application logic here
 
-        FrmRegistroAdmin ad = new FrmRegistroAdmin();
-        ad.setLocationRelativeTo(null);
-        ad.setVisible(true);
+        try {
+            ControlUsuario CUsuario = new ControlUsuario();
+            List<Usuario> usuarios = CUsuario.consultarUsuarios(null);
+            System.out.println("Usuarios size -> " + usuarios.size());
+
+            if (usuarios.isEmpty()) {
+                FrmRegistroAdmin ad = new FrmRegistroAdmin();
+                ad.setLocationRelativeTo(null);
+                ad.setVisible(true);
+            } else {
+                FrmInicioSesion ad = new FrmInicioSesion();
+                ad.setLocationRelativeTo(null);
+                ad.setVisible(true);
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        
 
     }
 

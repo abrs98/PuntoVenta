@@ -5,7 +5,8 @@
  */
 package GUI;
 
-
+import control.ControlUsuario;
+import entidades.Usuario;
 import java.util.Arrays;
 import java.util.List;
 import javax.swing.JCheckBox;
@@ -17,6 +18,10 @@ import javax.swing.UIManager;
  * @author Abrahan Barrios
  */
 public class FrmInicioSesion extends javax.swing.JFrame {
+
+    ControlUsuario CUsuario = new ControlUsuario();
+    boolean validado = false;
+    int count = 0;
 
     /**
      * Creates new form InicioSesion
@@ -43,7 +48,7 @@ public class FrmInicioSesion extends javax.swing.JFrame {
         btnLimpiar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
         cbxTipo = new javax.swing.JComboBox<>();
-        txtUsuario = new java.awt.TextField();
+        txtNombre = new java.awt.TextField();
         txtContrasenia = new javax.swing.JPasswordField();
         checkbox1 = new java.awt.Checkbox();
         checkbox2 = new java.awt.Checkbox();
@@ -99,21 +104,21 @@ public class FrmInicioSesion extends javax.swing.JFrame {
 
         cbxTipo.setBackground(new java.awt.Color(0, 0, 102));
         cbxTipo.setForeground(new java.awt.Color(255, 255, 255));
-        cbxTipo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Administrador(a)", "Cajero(a)" }));
-        cbxTipo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbxTipoActionPerformed(evt);
-            }
-        });
+        cbxTipo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione", "Administrador(a)", "Cajero(a)" }));
 
-        txtUsuario.addActionListener(new java.awt.event.ActionListener() {
+        txtNombre.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtUsuarioActionPerformed(evt);
+                txtNombreActionPerformed(evt);
             }
         });
 
         txtContrasenia.setMinimumSize(new java.awt.Dimension(8, 20));
         txtContrasenia.setPreferredSize(new java.awt.Dimension(8, 20));
+        txtContrasenia.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                txtContraseniaMouseClicked(evt);
+            }
+        });
         txtContrasenia.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtContraseniaActionPerformed(evt);
@@ -168,7 +173,7 @@ public class FrmInicioSesion extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(cbxMostrar))
                             .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(txtUsuario, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(txtNombre, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(cbxTipo, javax.swing.GroupLayout.Alignment.LEADING, 0, 128, Short.MAX_VALUE)))))
                 .addContainerGap(39, Short.MAX_VALUE))
         );
@@ -184,7 +189,7 @@ public class FrmInicioSesion extends javax.swing.JFrame {
                 .addGap(28, 28, 28)
                 .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblAdmin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(28, 28, 28)
                 .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(label1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -199,7 +204,6 @@ public class FrmInicioSesion extends javax.swing.JFrame {
                 .addGap(28, 28, 28))
         );
 
-        lblAdmin.getAccessibleContext().setAccessibleName("Nombre");
         lblAdmin.getAccessibleContext().setAccessibleDescription("");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -216,9 +220,9 @@ public class FrmInicioSesion extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUsuarioActionPerformed
+    private void txtNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNombreActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtUsuarioActionPerformed
+    }//GEN-LAST:event_txtNombreActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
         // TODO add your handling code here:
@@ -227,7 +231,7 @@ public class FrmInicioSesion extends javax.swing.JFrame {
 
     private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
         // TODO add your handling code here:
-        txtUsuario.setText("");
+        txtNombre.setText("");
         txtContrasenia.setText("");
         cbxTipo.setSelectedIndex(0);
     }//GEN-LAST:event_btnLimpiarActionPerformed
@@ -235,38 +239,83 @@ public class FrmInicioSesion extends javax.swing.JFrame {
     private void btnIngresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIngresarActionPerformed
         // TODO add your handling code here:
         String tipo = cbxTipo.getSelectedItem().toString();
-        String usuario = txtUsuario.getText();
-        String contrasenia = txtContrasenia.getText();
+        String nombre = txtNombre.getText();
+        String contra = Arrays.toString(txtContrasenia.getPassword());
 
-        if (tipo.equalsIgnoreCase("Administrador(a)")) {
-            int idAdmin = 0;
-            
-            
-                JOptionPane.showMessageDialog(null, "Bienvenido al sistema "+usuario+"!!!", 
-                        "Inicio exitoso", JOptionPane.INFORMATION_MESSAGE);
-                FrmAdministrador ad= new FrmAdministrador();
-                
-                ad.setIdAdmin(idAdmin);
-                ad.setVisible(true);
-                dispose();
-                
-
-        } else if (tipo.equalsIgnoreCase("Cajero(a)")) {
-            
-            int idCajero = 0;
-
-                JOptionPane.showMessageDialog(null, "Bienvenido al sistema "+usuario+"!!!", 
-                        "Inicio exitoso", JOptionPane.INFORMATION_MESSAGE);
-                
-                FrmCajero c= new FrmCajero();
-
-                c.setIdCajero(idCajero);
-                c.setVisible(true);
-                dispose();
-                
-            
-
+        if (tipo.equals("Seleccione")) {
+            JOptionPane.showMessageDialog(null, "Por favor Seleccione un tipo de usuario", "Información Incorrecta", JOptionPane.WARNING_MESSAGE);
+            txtNombre.requestFocus();
+            return;
+        } else if (nombre.equals("")) {
+            JOptionPane.showMessageDialog(null, "Por favor ingrese el nombre de usuario", "Información Incorrecta", JOptionPane.WARNING_MESSAGE);
+            txtNombre.requestFocus();
+            return;
+        } else if (contra.contains("[]")) {
+            JOptionPane.showMessageDialog(null, "Por favor ingrese la contraseña", "Información Incorrecta", JOptionPane.WARNING_MESSAGE);
+            txtContrasenia.grabFocus();
+            return;
         }
+
+        boolean admin = tipo.equals("Administrador(a)");
+        String contraDecoded = "";
+
+        // Ciclo que remueve del arreglo contra los corchetes, espacios y comas, agregando a la variable c los valores.
+        for (int i = 0; i < contra.length(); i++) {
+            if (contra.charAt(i) != '[' && contra.charAt(i) != ',' && contra.charAt(i) != ']' && contra.charAt(i) != ' ') {
+                contraDecoded += contra.charAt(i);
+            }
+        }
+
+        try {
+            List<Usuario> usuarios = CUsuario.consultarUsuarios(null);
+            System.out.println("Usuarios size -> " + usuarios.size());
+            Usuario u = new Usuario();
+
+            for (Usuario usuario : usuarios) {
+
+                if (admin) {
+                    if (usuario.getAdministrador() && usuario.getNombre().equals(nombre)
+                            && usuario.getContraseña().equals(contraDecoded)) {
+                        validado = true;
+                        u = usuario;
+                        break;
+                    }
+                } else {
+                    if (!usuario.getAdministrador() && usuario.getNombre().equals(nombre)
+                            && usuario.getContraseña().equals(contraDecoded)) {
+                        validado = true;
+                        u = usuario;
+                        break;
+                    }
+                }
+
+            }
+
+            if (validado) {
+                JOptionPane.showMessageDialog(null, "Bienvenido al sistema " + u.getNombre() + "!!!",
+                        "Inicio exitoso", JOptionPane.INFORMATION_MESSAGE);
+
+                if (admin) {
+                    FrmAdministrador ad = new FrmAdministrador();
+                    ad.setIdAdmin(u.getIdUsuario());
+                    ad.setVisible(true);
+                    this.dispose();
+
+                } else {
+                    FrmCajero c = new FrmCajero();
+                    c.setIdCajero(u.getIdUsuario());
+                    c.setVisible(true);
+                    this.dispose();
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "No se pudo acceder al sistema, verifique los datos ingresados",
+                        "Inicio fallido", JOptionPane.ERROR_MESSAGE);
+            }
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
 
     }//GEN-LAST:event_btnIngresarActionPerformed
 
@@ -277,22 +326,21 @@ public class FrmInicioSesion extends javax.swing.JFrame {
     private void cbxMostrarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cbxMostrarMouseClicked
         // TODO add your handling code here:
 
-        cbxMostrar.addActionListener((ae) -> {
-            JCheckBox c =(JCheckBox) ae.getSource();
-            txtContrasenia.setEchoChar(c.isSelected() ? '\u0000' : (Character)  UIManager.get("PasswordField.echoChar"));
-      });
-      
+        JCheckBox c = (JCheckBox) cbxMostrar;
+        txtContrasenia.setEchoChar(c.isSelected() ? '\u0000' : (Character) UIManager.get("PasswordField.echoChar"));
+        cbxTipo.updateUI();
 
-        
+
     }//GEN-LAST:event_cbxMostrarMouseClicked
-
-    private void cbxTipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxTipoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cbxTipoActionPerformed
 
     private void cbxMostrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxMostrarActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_cbxMostrarActionPerformed
+
+    private void txtContraseniaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtContraseniaMouseClicked
+        // TODO add your handling code here:
+        cbxTipo.updateUI();
+    }//GEN-LAST:event_txtContraseniaMouseClicked
 
     /**
      * @param args the command line arguments
@@ -344,6 +392,6 @@ public class FrmInicioSesion extends javax.swing.JFrame {
     private java.awt.Label lblTipo;
     private java.awt.Panel panel1;
     private javax.swing.JPasswordField txtContrasenia;
-    private java.awt.TextField txtUsuario;
+    private java.awt.TextField txtNombre;
     // End of variables declaration//GEN-END:variables
 }

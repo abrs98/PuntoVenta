@@ -5,6 +5,8 @@
  */
 package GUI;
 
+import control.ControlUsuario;
+import entidades.Usuario;
 import java.util.Arrays;
 import javax.swing.JOptionPane;
 
@@ -13,8 +15,8 @@ import javax.swing.JOptionPane;
  * @author Abrahan Barrios
  */
 public class FrmRegistroAdmin extends javax.swing.JFrame {
-
-
+    
+    ControlUsuario CUsuario = new ControlUsuario();
     /**
      * Creates new form RegistroAdmin
      */
@@ -43,8 +45,8 @@ public class FrmRegistroAdmin extends javax.swing.JFrame {
         label2 = new java.awt.Label();
         btnRegistrar = new javax.swing.JButton();
         label3 = new java.awt.Label();
-        pasContra1 = new javax.swing.JPasswordField();
-        pasContra2 = new javax.swing.JPasswordField();
+        txtContra = new javax.swing.JPasswordField();
+        txtContraConf = new javax.swing.JPasswordField();
         txtNombre = new javax.swing.JTextField();
         label6 = new java.awt.Label();
 
@@ -73,6 +75,11 @@ public class FrmRegistroAdmin extends javax.swing.JFrame {
         btnLimpiar.setBackground(new java.awt.Color(0, 24, 69));
         btnLimpiar.setForeground(new java.awt.Color(255, 255, 255));
         btnLimpiar.setText("Limpiar");
+        btnLimpiar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLimpiarActionPerformed(evt);
+            }
+        });
 
         label2.setAlignment(java.awt.Label.CENTER);
         label2.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
@@ -89,11 +96,11 @@ public class FrmRegistroAdmin extends javax.swing.JFrame {
             }
         });
 
-        label3.setText("Nombre");
+        label3.setText("Nombre Usuario");
 
-        pasContra1.setPreferredSize(new java.awt.Dimension(8, 20));
+        txtContra.setPreferredSize(new java.awt.Dimension(8, 20));
 
-        pasContra2.setPreferredSize(new java.awt.Dimension(8, 20));
+        txtContraConf.setPreferredSize(new java.awt.Dimension(8, 20));
 
         txtNombre.setPreferredSize(new java.awt.Dimension(8, 20));
 
@@ -126,8 +133,8 @@ public class FrmRegistroAdmin extends javax.swing.JFrame {
                         .addGap(30, 30, 30)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(pasContra1, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(pasContra2, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(txtContra, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtContraConf, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(0, 64, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -144,9 +151,9 @@ public class FrmRegistroAdmin extends javax.swing.JFrame {
                 .addGap(20, 20, 20)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(pasContra1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtContra, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(pasContra2, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(txtContraConf, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(label6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -179,16 +186,63 @@ public class FrmRegistroAdmin extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowStateChanged
 
     private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
-        // TODO add your handling code here:
+        
+        //Atributos de un usuario
+        String nombre = txtNombre.getText();
+        String contra = Arrays.toString(txtContra.getPassword());
+        String contraCon = Arrays.toString(txtContraConf.getPassword());
+        
+        if (nombre.equals("")) {
+            JOptionPane.showMessageDialog(null, "Por favor ingrese el nombre de usuario del administrador","Información Incorrecta",JOptionPane.WARNING_MESSAGE);
+            txtNombre.grabFocus();
+            return;
+        } else if (contra.contains("[]")) {
+            JOptionPane.showMessageDialog(null, "Por favor ingrese la contraseña","Información Incorrecta",JOptionPane.WARNING_MESSAGE);
+            txtContra.grabFocus();
+            return;
+        } else if (contraCon.contains("[]")) {
+            JOptionPane.showMessageDialog(null, "Por favor repita la contraseña","Información Incorrecta",JOptionPane.WARNING_MESSAGE);
+            txtContraConf.grabFocus();
+            return;
+        }
+
+        if (!contra.equals(contraCon)) {
+            JOptionPane.showMessageDialog(null, "Las contraseñas no coinciden, por favor revise","Información Incorrecta",JOptionPane.WARNING_MESSAGE);
+            txtContra.grabFocus();
+            return;
+        }
+        
+        String c = "";
+        
+        // Ciclo que remueve del arreglo contra los corchetes, espacios y comas, agregando a la variable c los valores.
+        for (int i = 0; i < contra.length(); i++) {
+            if(contra.charAt(i)!='['&&contra.charAt(i)!=','&&contra.charAt(i)!=']'&&contra.charAt(i)!=' '){
+                c+=contra.charAt(i);
+            }
+        }
+        
+        try {
+            Usuario user = new Usuario(null, nombre, c, true);
             
+            CUsuario.guardarUsuario(user);
             JOptionPane.showMessageDialog(null, "Usuario registrado exitosamente", "Registro satisfactorio", JOptionPane.INFORMATION_MESSAGE);
-            FrmInicioSesion inicio= new FrmInicioSesion();
+            FrmInicioSesion inicio = new FrmInicioSesion();
             inicio.setVisible(true);
             this.dispose();
             
+        } catch (Exception e) {
+        }
         
 
+
     }//GEN-LAST:event_btnRegistrarActionPerformed
+
+    private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
+        // TODO add your handling code here:
+        txtNombre.setText("");
+        txtContra.setText("");
+        txtContraConf.setText("");
+    }//GEN-LAST:event_btnLimpiarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -240,8 +294,8 @@ public class FrmRegistroAdmin extends javax.swing.JFrame {
     private java.awt.Label label3;
     private java.awt.Label label6;
     private java.awt.Label label8;
-    private javax.swing.JPasswordField pasContra1;
-    private javax.swing.JPasswordField pasContra2;
+    private javax.swing.JPasswordField txtContra;
+    private javax.swing.JPasswordField txtContraConf;
     private javax.swing.JTextField txtNombre;
     // End of variables declaration//GEN-END:variables
 }
